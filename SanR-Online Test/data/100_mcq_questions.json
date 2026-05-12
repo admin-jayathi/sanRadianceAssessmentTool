@@ -1,0 +1,1204 @@
+{
+  "mcq": [
+    {
+      "id": "mcq_1",
+      "section": "GPU / CPU",
+      "question": "What does GPU stand for?",
+      "options": [
+        "General Processing Unit",
+        "Graphical Power Unit",
+        "Graphics Processing Unit",
+        "Global Processing Unit"
+      ],
+      "correct": 2
+    },
+    {
+      "id": "mcq_2",
+      "section": "GPU / CPU",
+      "question": "Which component performs arithmetic and logical operations?",
+      "options": [
+        "GPU",
+        "SSD",
+        "RAM",
+        "CPU"
+      ],
+      "correct": 3
+    },
+    {
+      "id": "mcq_3",
+      "section": "GPU / CPU",
+      "question": "CUDA is associated with which company?",
+      "options": [
+        "IBM",
+        "NVIDIA",
+        "AMD",
+        "Intel"
+      ],
+      "correct": 1
+    },
+    {
+      "id": "mcq_4",
+      "section": "GPU / CPU",
+      "question": "Which memory is used inside GPU for high-speed computation?",
+      "options": [
+        "ROM",
+        "HDD",
+        "Cache",
+        "VRAM"
+      ],
+      "correct": 3
+    },
+    {
+      "id": "mcq_5",
+      "section": "GPU / CPU",
+      "question": "CPU cores are mainly used for?",
+      "options": [
+        "Networking",
+        "Storage",
+        "Serial processing",
+        "Parallel graphics"
+      ],
+      "correct": 2
+    },
+    {
+      "id": "mcq_6",
+      "section": "Kubernetes",
+      "question": "What is the smallest deployable unit in Kubernetes?",
+      "options": [
+        "Cluster",
+        "Pod",
+        "Node",
+        "Service"
+      ],
+      "correct": 1
+    },
+    {
+      "id": "mcq_7",
+      "section": "Kubernetes",
+      "question": "Which command is used to view pods?",
+      "options": [
+        "kubectl show pods",
+        "kubectl list",
+        "kubectl pods",
+        "kubectl get pods"
+      ],
+      "correct": 3
+    },
+    {
+      "id": "mcq_8",
+      "section": "Kubernetes",
+      "question": "What does kubelet do?",
+      "options": [
+        "Stores data",
+        "Schedules pods",
+        "Runs containers on nodes",
+        "Manages nodes"
+      ],
+      "correct": 2
+    },
+    {
+      "id": "mcq_9",
+      "section": "Kubernetes",
+      "question": "Which object exposes a pod externally?",
+      "options": [
+        "Node",
+        "Service",
+        "Deployment",
+        "ReplicaSet"
+      ],
+      "correct": 1
+    },
+    {
+      "id": "mcq_10",
+      "section": "Kubernetes",
+      "question": "Kubernetes uses which container runtime commonly?",
+      "options": [
+        "BIOS",
+        "Hyper-V",
+        "VirtualBox",
+        "Docker/containerd"
+      ],
+      "correct": 3
+    },
+    {
+      "id": "mcq_11",
+      "section": "Storage Media",
+      "question": "Which is fastest storage?",
+      "options": [
+        "Tape",
+        "HDD",
+        "NVMe SSD",
+        "SATA SSD"
+      ],
+      "correct": 2
+    },
+    {
+      "id": "mcq_12",
+      "section": "Storage Media",
+      "question": "HDD stores data using?",
+      "options": [
+        "Flash",
+        "Magnetic disks",
+        "RAM",
+        "Optical"
+      ],
+      "correct": 1
+    },
+    {
+      "id": "mcq_13",
+      "section": "Storage Media",
+      "question": "NVMe uses which interface?",
+      "options": [
+        "USB",
+        "SAS",
+        "SATA",
+        "PCIe"
+      ],
+      "correct": 3
+    },
+    {
+      "id": "mcq_14",
+      "section": "Storage Media",
+      "question": "Which storage has no moving parts?",
+      "options": [
+        "HDD",
+        "SSD",
+        "CD",
+        "Tape"
+      ],
+      "correct": 1
+    },
+    {
+      "id": "mcq_15",
+      "section": "Storage Media",
+      "question": "Tape storage is mainly used for?",
+      "options": [
+        "OS",
+        "Backup",
+        "Gaming",
+        "RAM"
+      ],
+      "correct": 1
+    },
+    {
+      "id": "mcq_16",
+      "section": "Storage Protocols",
+      "question": "Which protocol uses WWPN?",
+      "options": [
+        "SMB",
+        "FC",
+        "NFS",
+        "iSCSI"
+      ],
+      "correct": 1
+    },
+    {
+      "id": "mcq_17",
+      "section": "Storage Protocols",
+      "question": "iSCSI works over?",
+      "options": [
+        "SATA",
+        "USB",
+        "Fibre",
+        "Ethernet/IP"
+      ],
+      "correct": 3
+    },
+    {
+      "id": "mcq_18",
+      "section": "Storage Protocols",
+      "question": "NFS is used for?",
+      "options": [
+        "GPU computing",
+        "File sharing",
+        "BIOS",
+        "Block storage"
+      ],
+      "correct": 1
+    },
+    {
+      "id": "mcq_19",
+      "section": "Storage Protocols",
+      "question": "SMB is mainly used in?",
+      "options": [
+        "GPU",
+        "Storage array firmware",
+        "Windows file sharing",
+        "Linux only"
+      ],
+      "correct": 2
+    },
+    {
+      "id": "mcq_20",
+      "section": "Storage Protocols",
+      "question": "NVMe-oF extends NVMe over?",
+      "options": [
+        "RAM",
+        "SATA",
+        "USB",
+        "Fibre/Ethernet"
+      ],
+      "correct": 3
+    },
+    {
+      "id": "mcq_21",
+      "section": "Virtualization Platforms",
+      "question": "VMware ESXi is a?",
+      "options": [
+        "Driver",
+        "Hypervisor",
+        "BIOS",
+        "OS"
+      ],
+      "correct": 1
+    },
+    {
+      "id": "mcq_22",
+      "section": "Virtualization Platforms",
+      "question": "KVM is built into?",
+      "options": [
+        "MacOS",
+        "BIOS",
+        "Windows",
+        "Linux kernel"
+      ],
+      "correct": 3
+    },
+    {
+      "id": "mcq_23",
+      "section": "Virtualization Platforms",
+      "question": "Hyper-V belongs to?",
+      "options": [
+        "IBM",
+        "AWS",
+        "Microsoft",
+        "Google"
+      ],
+      "correct": 2
+    },
+    {
+      "id": "mcq_24",
+      "section": "Virtualization Platforms",
+      "question": "Virtual machine runs on?",
+      "options": [
+        "GPU",
+        "SSD",
+        "Hypervisor",
+        "Hardware directly"
+      ],
+      "correct": 2
+    },
+    {
+      "id": "mcq_25",
+      "section": "Virtualization Platforms",
+      "question": "Which is open-source virtualization?",
+      "options": [
+        "ESXi",
+        "XenServer paid",
+        "Hyper-V",
+        "KVM"
+      ],
+      "correct": 3
+    },
+    {
+      "id": "mcq_26",
+      "section": "Linux Commands",
+      "question": "List files in directory?",
+      "options": [
+        "list",
+        "show",
+        "ls",
+        "dir"
+      ],
+      "correct": 2
+    },
+    {
+      "id": "mcq_27",
+      "section": "Linux Commands",
+      "question": "Change directory command?",
+      "options": [
+        "ls",
+        "cd",
+        "mv",
+        "dir"
+      ],
+      "correct": 1
+    },
+    {
+      "id": "mcq_28",
+      "section": "Linux Commands",
+      "question": "View file content?",
+      "options": [
+        "read",
+        "view",
+        "open",
+        "cat"
+      ],
+      "correct": 3
+    },
+    {
+      "id": "mcq_29",
+      "section": "Linux Commands",
+      "question": "Delete file?",
+      "options": [
+        "erase",
+        "remove",
+        "rm",
+        "del"
+      ],
+      "correct": 2
+    },
+    {
+      "id": "mcq_30",
+      "section": "Linux Commands",
+      "question": "Show current directory?",
+      "options": [
+        "dir",
+        "path",
+        "cd",
+        "pwd"
+      ],
+      "correct": 3
+    },
+    {
+      "id": "mcq_31",
+      "section": "Linux for AI",
+      "question": "GPU usage command?",
+      "options": [
+        "ls",
+        "df",
+        "nvidia-smi",
+        "top"
+      ],
+      "correct": 2
+    },
+    {
+      "id": "mcq_32",
+      "section": "Linux for AI",
+      "question": "Monitor CPU usage?",
+      "options": [
+        "vmstat only",
+        "top",
+        "cpustat",
+        "ps"
+      ],
+      "correct": 1
+    },
+    {
+      "id": "mcq_33",
+      "section": "Linux for AI",
+      "question": "Install package Ubuntu?",
+      "options": [
+        "pkg",
+        "install",
+        "yum",
+        "apt"
+      ],
+      "correct": 3
+    },
+    {
+      "id": "mcq_34",
+      "section": "Linux for AI",
+      "question": "Check memory usage?",
+      "options": [
+        "top only",
+        "usage",
+        "free",
+        "mem"
+      ],
+      "correct": 2
+    },
+    {
+      "id": "mcq_35",
+      "section": "Linux for AI",
+      "question": "Check disk usage?",
+      "options": [
+        "size",
+        "du",
+        "df",
+        "disk"
+      ],
+      "correct": 2
+    },
+    {
+      "id": "mcq_36",
+      "section": "AI Basics",
+      "question": "AI stands for?",
+      "options": [
+        "Artificial Intelligence",
+        "Advanced Integration",
+        "Auto Input",
+        "Automated Intelligence"
+      ],
+      "correct": 0
+    },
+    {
+      "id": "mcq_37",
+      "section": "AI Basics",
+      "question": "Machine learning is part of?",
+      "options": [
+        "Networking",
+        "Storage",
+        "AI",
+        "OS"
+      ],
+      "correct": 2
+    },
+    {
+      "id": "mcq_38",
+      "section": "AI Basics",
+      "question": "Neural networks mimic?",
+      "options": [
+        "GPU",
+        "Brain",
+        "CPU",
+        "Disk"
+      ],
+      "correct": 1
+    },
+    {
+      "id": "mcq_39",
+      "section": "AI Basics",
+      "question": "Training data is used for?",
+      "options": [
+        "Backup",
+        "Storage",
+        "Learning model",
+        "Testing"
+      ],
+      "correct": 2
+    },
+    {
+      "id": "mcq_40",
+      "section": "AI Basics",
+      "question": "AI model improves by?",
+      "options": [
+        "Formatting",
+        "Training",
+        "Guessing",
+        "Storage"
+      ],
+      "correct": 1
+    },
+    {
+      "id": "mcq_41",
+      "section": "AI Models",
+      "question": "GPT is a?",
+      "options": [
+        "Language model",
+        "OS",
+        "Database",
+        "Kernel"
+      ],
+      "correct": 0
+    },
+    {
+      "id": "mcq_42",
+      "section": "AI Models",
+      "question": "CNN is used for?",
+      "options": [
+        "CPU",
+        "Storage",
+        "Text",
+        "Images"
+      ],
+      "correct": 3
+    },
+    {
+      "id": "mcq_43",
+      "section": "AI Models",
+      "question": "Transformer model is used in?",
+      "options": [
+        "Networking",
+        "BIOS",
+        "NLP",
+        "Storage"
+      ],
+      "correct": 2
+    },
+    {
+      "id": "mcq_44",
+      "section": "AI Models",
+      "question": "LLM stands for?",
+      "options": [
+        "Linux Load Manager",
+        "Low Level Machine",
+        "Logical Link Model",
+        "Large Language Model"
+      ],
+      "correct": 3
+    },
+    {
+      "id": "mcq_45",
+      "section": "AI Models",
+      "question": "Model size refers to?",
+      "options": [
+        "RAM only",
+        "CPU cores",
+        "Number of parameters",
+        "Disk size"
+      ],
+      "correct": 2
+    },
+    {
+      "id": "mcq_46",
+      "section": "Python Basics",
+      "question": "Print output?",
+      "options": [
+        "print()",
+        "printf",
+        "write",
+        "echo"
+      ],
+      "correct": 0
+    },
+    {
+      "id": "mcq_47",
+      "section": "Python Basics",
+      "question": "List is?",
+      "options": [
+        "Immutable",
+        "Static",
+        "Mutable",
+        "Fixed"
+      ],
+      "correct": 2
+    },
+    {
+      "id": "mcq_48",
+      "section": "Python Basics",
+      "question": "Dictionary uses?",
+      "options": [
+        "Numbers",
+        "Key-value",
+        "Index",
+        "Strings only"
+      ],
+      "correct": 1
+    },
+    {
+      "id": "mcq_49",
+      "section": "Python Basics",
+      "question": "Loop in Python?",
+      "options": [
+        "repeat",
+        "for",
+        "iterate",
+        "cycle"
+      ],
+      "correct": 1
+    },
+    {
+      "id": "mcq_50",
+      "section": "Python Basics",
+      "question": "Condition keyword?",
+      "options": [
+        "when",
+        "check",
+        "case",
+        "if"
+      ],
+      "correct": 3
+    },
+    {
+      "id": "mcq_51",
+      "section": "Mixed (51-100)",
+      "question": "Fastest CPU cache?",
+      "options": [
+        "L1",
+        "L3",
+        "RAM",
+        "L2"
+      ],
+      "correct": 0
+    },
+    {
+      "id": "mcq_52",
+      "section": "Mixed (51-100)",
+      "question": "Kubernetes cluster has?",
+      "options": [
+        "GPUs only",
+        "Nodes",
+        "CPUs",
+        "RAM only"
+      ],
+      "correct": 1
+    },
+    {
+      "id": "mcq_53",
+      "section": "Mixed (51-100)",
+      "question": "SSD uses?",
+      "options": [
+        "Tape",
+        "Flash",
+        "Optical",
+        "Magnetic"
+      ],
+      "correct": 1
+    },
+    {
+      "id": "mcq_54",
+      "section": "Mixed (51-100)",
+      "question": "iSCSI uses?",
+      "options": [
+        "NVMe",
+        "IP",
+        "WWPN",
+        "SATA"
+      ],
+      "correct": 1
+    },
+    {
+      "id": "mcq_55",
+      "section": "Mixed (51-100)",
+      "question": "VM snapshot is?",
+      "options": [
+        "CPU",
+        "Backup",
+        "State capture",
+        "Storage"
+      ],
+      "correct": 2
+    },
+    {
+      "id": "mcq_56",
+      "section": "Mixed (51-100)",
+      "question": "chmod changes?",
+      "options": [
+        "Owner",
+        "File name",
+        "Permissions",
+        "Size"
+      ],
+      "correct": 2
+    },
+    {
+      "id": "mcq_57",
+      "section": "Mixed (51-100)",
+      "question": "GPU cores are for?",
+      "options": [
+        "Network",
+        "Storage",
+        "Serial",
+        "Parallel"
+      ],
+      "correct": 3
+    },
+    {
+      "id": "mcq_58",
+      "section": "Mixed (51-100)",
+      "question": "Kubernetes scheduler does?",
+      "options": [
+        "Pod placement",
+        "Storage",
+        "Networking",
+        "Logging"
+      ],
+      "correct": 0
+    },
+    {
+      "id": "mcq_59",
+      "section": "Mixed (51-100)",
+      "question": "RAID 0 provides?",
+      "options": [
+        "Performance",
+        "Compression",
+        "Redundancy",
+        "Backup"
+      ],
+      "correct": 0
+    },
+    {
+      "id": "mcq_60",
+      "section": "Mixed (51-100)",
+      "question": "FC stands for?",
+      "options": [
+        "Fast Compute",
+        "Fibre Channel",
+        "File Cache",
+        "Flash Core"
+      ],
+      "correct": 1
+    },
+    {
+      "id": "mcq_61",
+      "section": "Mixed (51-100)",
+      "question": "Hypervisor type-1 runs on?",
+      "options": [
+        "BIOS",
+        "App",
+        "Hardware",
+        "OS"
+      ],
+      "correct": 2
+    },
+    {
+      "id": "mcq_62",
+      "section": "Mixed (51-100)",
+      "question": "df shows?",
+      "options": [
+        "GPU",
+        "CPU",
+        "Memory",
+        "Disk"
+      ],
+      "correct": 3
+    },
+    {
+      "id": "mcq_63",
+      "section": "Mixed (51-100)",
+      "question": "AI model inference means?",
+      "options": [
+        "Backup",
+        "Prediction",
+        "Storage",
+        "Training"
+      ],
+      "correct": 1
+    },
+    {
+      "id": "mcq_64",
+      "section": "Mixed (51-100)",
+      "question": "Python variable is?",
+      "options": [
+        "Static",
+        "Dynamic",
+        "Fixed",
+        "Compiled"
+      ],
+      "correct": 1
+    },
+    {
+      "id": "mcq_65",
+      "section": "Mixed (51-100)",
+      "question": "NVMe latency is?",
+      "options": [
+        "Medium",
+        "High",
+        "Low",
+        "Random"
+      ],
+      "correct": 2
+    },
+    {
+      "id": "mcq_66",
+      "section": "Mixed (51-100)",
+      "question": "Pod runs?",
+      "options": [
+        "CPU",
+        "Containers",
+        "VM",
+        "OS"
+      ],
+      "correct": 1
+    },
+    {
+      "id": "mcq_67",
+      "section": "Mixed (51-100)",
+      "question": "echo command does?",
+      "options": [
+        "Copy",
+        "Delete",
+        "Move",
+        "Print text"
+      ],
+      "correct": 3
+    },
+    {
+      "id": "mcq_68",
+      "section": "Mixed (51-100)",
+      "question": "AI requires?",
+      "options": [
+        "BIOS",
+        "Disk",
+        "Data",
+        "CPU only"
+      ],
+      "correct": 2
+    },
+    {
+      "id": "mcq_69",
+      "section": "Mixed (51-100)",
+      "question": "Model training uses?",
+      "options": [
+        "BIOS",
+        "RAM",
+        "GPU",
+        "SSD"
+      ],
+      "correct": 2
+    },
+    {
+      "id": "mcq_70",
+      "section": "Mixed (51-100)",
+      "question": "Python indentation is?",
+      "options": [
+        "Mandatory",
+        "Deprecated",
+        "Optional",
+        "Ignored"
+      ],
+      "correct": 0
+    },
+    {
+      "id": "mcq_71",
+      "section": "Mixed (51-100)",
+      "question": "Storage array provides?",
+      "options": [
+        "Storage",
+        "GPU",
+        "RAM",
+        "CPU"
+      ],
+      "correct": 0
+    },
+    {
+      "id": "mcq_72",
+      "section": "Mixed (51-100)",
+      "question": "Kubernetes uses YAML for?",
+      "options": [
+        "Logs",
+        "Config",
+        "Code",
+        "Storage"
+      ],
+      "correct": 1
+    },
+    {
+      "id": "mcq_73",
+      "section": "Mixed (51-100)",
+      "question": "uname shows?",
+      "options": [
+        "Disk",
+        "User",
+        "Kernel",
+        "CPU"
+      ],
+      "correct": 2
+    },
+    {
+      "id": "mcq_74",
+      "section": "Mixed (51-100)",
+      "question": "AI bias comes from?",
+      "options": [
+        "OS",
+        "CPU",
+        "RAM",
+        "Data"
+      ],
+      "correct": 3
+    },
+    {
+      "id": "mcq_75",
+      "section": "Mixed (51-100)",
+      "question": "Python tuple is?",
+      "options": [
+        "List",
+        "Dict",
+        "Mutable",
+        "Immutable"
+      ],
+      "correct": 3
+    },
+    {
+      "id": "mcq_76",
+      "section": "Mixed (51-100)",
+      "question": "GPU memory is?",
+      "options": [
+        "VRAM",
+        "Disk",
+        "Cache",
+        "RAM"
+      ],
+      "correct": 0
+    },
+    {
+      "id": "mcq_77",
+      "section": "Mixed (51-100)",
+      "question": "Deployment manages?",
+      "options": [
+        "CPU",
+        "RAM",
+        "Pods",
+        "Nodes"
+      ],
+      "correct": 2
+    },
+    {
+      "id": "mcq_78",
+      "section": "Mixed (51-100)",
+      "question": "rm -rf does?",
+      "options": [
+        "Move",
+        "Force delete",
+        "Safe delete",
+        "Copy"
+      ],
+      "correct": 1
+    },
+    {
+      "id": "mcq_79",
+      "section": "Mixed (51-100)",
+      "question": "AI model accuracy means?",
+      "options": [
+        "Speed",
+        "Cost",
+        "Size",
+        "Correctness"
+      ],
+      "correct": 3
+    },
+    {
+      "id": "mcq_80",
+      "section": "Mixed (51-100)",
+      "question": "Python function keyword?",
+      "options": [
+        "define",
+        "def",
+        "func",
+        "function"
+      ],
+      "correct": 1
+    },
+    {
+      "id": "mcq_81",
+      "section": "Mixed (51-100)",
+      "question": "SSD endurance depends on?",
+      "options": [
+        "Reads",
+        "GPU",
+        "CPU",
+        "Writes"
+      ],
+      "correct": 3
+    },
+    {
+      "id": "mcq_82",
+      "section": "Mixed (51-100)",
+      "question": "Kubernetes node is?",
+      "options": [
+        "Pod",
+        "Machine",
+        "Service",
+        "Disk"
+      ],
+      "correct": 1
+    },
+    {
+      "id": "mcq_83",
+      "section": "Mixed (51-100)",
+      "question": "ps command shows?",
+      "options": [
+        "GPU",
+        "CPU",
+        "Processes",
+        "Disk"
+      ],
+      "correct": 2
+    },
+    {
+      "id": "mcq_84",
+      "section": "Mixed (51-100)",
+      "question": "AI training needs?",
+      "options": [
+        "BIOS",
+        "Disk",
+        "Data",
+        "RAM"
+      ],
+      "correct": 2
+    },
+    {
+      "id": "mcq_85",
+      "section": "Mixed (51-100)",
+      "question": "Python uses?",
+      "options": [
+        "Interpretation",
+        "Assembly",
+        "BIOS",
+        "Compilation"
+      ],
+      "correct": 0
+    },
+    {
+      "id": "mcq_86",
+      "section": "Mixed (51-100)",
+      "question": "RAID 1 provides?",
+      "options": [
+        "Cache",
+        "Mirroring",
+        "Striping",
+        "Speed"
+      ],
+      "correct": 1
+    },
+    {
+      "id": "mcq_87",
+      "section": "Mixed (51-100)",
+      "question": "Service in K8s provides?",
+      "options": [
+        "CPU",
+        "RAM",
+        "Networking",
+        "Storage"
+      ],
+      "correct": 2
+    },
+    {
+      "id": "mcq_88",
+      "section": "Mixed (51-100)",
+      "question": "kill command does?",
+      "options": [
+        "Move",
+        "Copy",
+        "Start",
+        "Stop process"
+      ],
+      "correct": 3
+    },
+    {
+      "id": "mcq_89",
+      "section": "Mixed (51-100)",
+      "question": "AI model overfitting means?",
+      "options": [
+        "No training",
+        "Storage",
+        "Under learning",
+        "Too much training on same data"
+      ],
+      "correct": 3
+    },
+    {
+      "id": "mcq_90",
+      "section": "Mixed (51-100)",
+      "question": "Python string is?",
+      "options": [
+        "Immutable",
+        "List",
+        "Dict",
+        "Mutable"
+      ],
+      "correct": 0
+    },
+    {
+      "id": "mcq_91",
+      "section": "Mixed (51-100)",
+      "question": "NVMe uses?",
+      "options": [
+        "USB",
+        "SATA",
+        "SAS",
+        "PCIe"
+      ],
+      "correct": 3
+    },
+    {
+      "id": "mcq_92",
+      "section": "Mixed (51-100)",
+      "question": "Pod restart policy defines?",
+      "options": [
+        "GPU",
+        "CPU",
+        "Restart behavior",
+        "Storage"
+      ],
+      "correct": 2
+    },
+    {
+      "id": "mcq_93",
+      "section": "Mixed (51-100)",
+      "question": "df -h shows?",
+      "options": [
+        "RAM",
+        "Disk human-readable",
+        "GPU",
+        "CPU"
+      ],
+      "correct": 1
+    },
+    {
+      "id": "mcq_94",
+      "section": "Mixed (51-100)",
+      "question": "AI model parameter is?",
+      "options": [
+        "CPU",
+        "Disk",
+        "Variable",
+        "Weight"
+      ],
+      "correct": 3
+    },
+    {
+      "id": "mcq_95",
+      "section": "Mixed (51-100)",
+      "question": "Python loop exits with?",
+      "options": [
+        "exit",
+        "return",
+        "stop",
+        "break"
+      ],
+      "correct": 3
+    },
+    {
+      "id": "mcq_96",
+      "section": "Mixed (51-100)",
+      "question": "HDD speed is measured in?",
+      "options": [
+        "MB",
+        "GHz",
+        "RPM",
+        "FPS"
+      ],
+      "correct": 2
+    },
+    {
+      "id": "mcq_97",
+      "section": "Mixed (51-100)",
+      "question": "K8s ingress handles?",
+      "options": [
+        "External access",
+        "CPU",
+        "RAM",
+        "Storage"
+      ],
+      "correct": 0
+    },
+    {
+      "id": "mcq_98",
+      "section": "Mixed (51-100)",
+      "question": "top shows?",
+      "options": [
+        "Disk",
+        "Processes",
+        "BIOS",
+        "GPU"
+      ],
+      "correct": 1
+    },
+    {
+      "id": "mcq_99",
+      "section": "Mixed (51-100)",
+      "question": "AI model deployment means?",
+      "options": [
+        "Production usage",
+        "Backup",
+        "Training",
+        "Storage"
+      ],
+      "correct": 0
+    },
+    {
+      "id": "mcq_100",
+      "section": "Mixed (51-100)",
+      "question": "Python index starts at?",
+      "options": [
+        "-1",
+        "10",
+        "0",
+        "1"
+      ],
+      "correct": 2
+    }
+  ]
+}
