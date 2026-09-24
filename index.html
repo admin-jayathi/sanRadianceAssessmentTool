@@ -1,0 +1,1495 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title> SanRadiance — Online Test Platform</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .welcome-admin-login {
+      display: flex;
+      justify-content: flex-end;
+      margin: 16px 22px 0 auto;
+      width: 100%;
+      max-width: 1200px;
+    }
+    .welcome-admin-login .admin-login-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px 18px;
+      background: #2563eb;
+      color: #fff;
+      border-radius: 10px;
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 700;
+      box-shadow: 0 8px 18px rgba(37, 99, 235, 0.2);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .welcome-admin-login .admin-login-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 12px 22px rgba(37, 99, 235, 0.25);
+    }
+  </style>
+
+  <!-- Firebase SDKs (compat for global usage) -->
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+</head>
+<body>
+
+<!-- ═══ TOAST CONTAINER ════════════════════════════════════════ -->
+<div class="toast-container" id="toast-container"></div>
+
+<!-- ═══ HEADER (shown after login) ════════════════════════════ -->
+<header class="app-header hidden" id="app-header">
+  <div class="header-logo">SanRadiance <span>/ Technical Test</span></div>
+
+  <div class="section-tabs" id="section-tabs">
+    <button class="section-tab active" id="tab-mcq" onclick="goToSection('mcq')">MCQ</button>
+    <button class="section-tab" id="tab-coding" onclick="goToSection('coding')">Coding</button>
+    <button class="section-tab" id="tab-submit" onclick="goToSection('submit')">Submit</button>
+  </div>
+
+  <div class="header-info">
+    <span class="header-user" id="header-username"></span>
+    <div class="timer-block" id="timer-block">
+      <span class="timer-icon">⏱</span>
+      <span id="timer-display">120:00</span>
+    </div>
+  </div>
+</header>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- SECTION: WELCOME                                           -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<section class="page-section active" id="section-welcome">
+  <div class="welcome-admin-login">
+    <a href="admin.html" class="admin-login-btn">Admin Login</a>
+  </div>
+
+  <div class="welcome-page">
+    
+    <!-- Left: Instructions -->
+    <div class="welcome-hero">
+      <h1 class="hero-title">SanRadiance Technologies</h1>
+      <h2 class="hero-subtitle">Technical <span class="highlight">Assessment</span> Platform</h2>
+      <p class="subtitle">A timed online test to evaluate your programming knowledge, algorithmic thinking, and problem-solving skills.</p>
+
+      <div class="test-meta-grid">
+        <div class="meta-card">
+          <span class="value">120</span>
+          <span class="label">Minutes</span>
+        </div>
+        <div class="meta-card">
+          <span class="value">30</span>
+          <span class="label">MCQ Questions</span>
+        </div>
+        <div class="meta-card">
+          <span class="value">5</span>
+          <span class="label">Coding Problems</span>
+        </div>
+      </div>
+
+      <div class="instructions-card">
+        <div class="instructions-header">📋 Instructions &amp; Rules</div>
+        <div class="instructions-body">
+          <div class="instruction-item">
+            <span class="icon">⏱</span>
+            <span>The test has a strict <strong>120-minute</strong> timer. Once started, the timer cannot be paused.</span>
+          </div>
+          <div class="instruction-item">
+            <span class="icon">💾</span>
+            <span>All answers are <strong>auto-saved</strong> every few seconds. You can navigate freely between questions.</span>
+          </div>
+          <div class="instruction-item">
+            <span class="icon">🚫</span>
+            <span>Tab switching and window changes are <strong>detected and logged</strong>. Avoid switching tabs during the test.</span>
+          </div>
+          <div class="instruction-item">
+            <span class="icon">📝</span>
+            <span>MCQ section: Select the single best answer. You can flag questions for review.</span>
+          </div>
+          <div class="instruction-item">
+            <span class="icon">💻</span>
+            <span>Coding section: Write complete solutions in C or Python.</span>
+          </div>
+          <div class="instruction-item">
+            <span class="icon">✅</span>
+            <span>Click <strong>Submit Test</strong> when done or it will auto-submit when time expires.</span>
+          </div>
+          <div class="instruction-item">
+            <span class="icon">🔒</span>
+            <span>Once submitted, the test is <strong>locked</strong> and cannot be modified.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right: Candidate Registration Form -->
+    <div class="auth-card">
+      <h2>Candidate Registration</h2>
+      <p class="auth-sub">Fill in your details and select your programming language to begin the test.</p>
+      <div class="auth-error" id="register-error"></div>
+
+      <div class="form-group">
+        <label>Full Name</label>
+        <input type="text" id="reg-name" placeholder="Jane Smith" autocomplete="name" />
+      </div>
+      <div class="form-group">
+        <label>Email Address</label>
+        <input type="email" id="reg-email" placeholder="you@example.com" autocomplete="email" />
+      </div>
+      <div class="form-group">
+        <label>Mobile Number</label>
+        <input type="tel" id="reg-phone" placeholder="+91 98765 43210" autocomplete="tel" />
+      </div>
+      <div class="form-group">
+        <label>Education</label>
+        <input type="text" id="reg-education" placeholder="e.g. B.E - Computer Science & Engineering" />
+      </div>
+      <div class="form-group">
+        <label>College/University</label>
+        <input type="text" id="reg-college" placeholder="Enter college/university name" />
+      </div>
+      <div class="form-group">
+        <label>Passout Year</label>
+        <input type="number" id="reg-passout-year" placeholder="e.g. 2024" min="1900" max="2100" />
+      </div>
+      <div class="form-group">
+        <label>Parent/Guardian Name</label>
+        <input type="text" id="reg-parent" placeholder="Enter parent/guardian name" />
+      </div>
+      <div class="form-group">
+        <label>Parent/Guardian's Mobile Number</label>
+        <input type="tel" id="reg-parent-phone" placeholder="Enter parent/guardian's mobile number" />
+      </div>
+      <div class="form-group">
+        <label>Full Address</label>
+        <textarea id="reg-address" placeholder="Enter your full address" rows="4"></textarea>
+      </div>
+      <div class="form-group">
+        <label>Programming Language</label>
+        <select id="reg-language">
+          <option value="">Choose one</option>
+          <option value="python">Python</option>
+          <option value="c">C</option>
+        </select>
+      </div>
+      <button class="btn btn-primary" id="register-btn" onclick="handleRegister()">
+        Start Test
+      </button>
+    </div>
+
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- SECTION: MCQ                                               -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<section class="page-section" id="section-mcq">
+  <div class="test-layout">
+
+    <!-- Main Question Area -->
+    <div class="test-main" id="mcq-main">
+      <div class="question-header">
+        <div>
+          <span class="question-num" id="mcq-q-num">Q 1 / 10</span>
+        </div>
+        <span class="question-section-tag" id="mcq-section-tag">Loading</span>
+      </div>
+
+      <div class="progress-bar-wrap">
+        <div class="progress-bar-fill" id="mcq-progress-bar" style="width:0%"></div>
+      </div>
+
+      <div class="question-text" id="mcq-question-text">Loading question...</div>
+
+      <div class="options-list" id="mcq-options-list">
+        <!-- Options injected by JS -->
+      </div>
+
+      <div class="question-actions">
+        <button class="btn btn-secondary btn-sm" id="mcq-flag-btn" onclick="toggleFlag()">🚩 Mark for Review</button>
+        <button class="btn btn-secondary btn-sm" onclick="clearMcqAnswer()">✕ Clear Answer</button>
+        <div style="margin-left:auto; display:flex; gap:8px;">
+          <button class="btn btn-secondary btn-sm" id="mcq-prev-btn" onclick="mcqNav(-1)">← Prev</button>
+          <button class="btn btn-primary btn-sm" id="mcq-next-btn" onclick="mcqNav(1)">Next →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sidebar: Palette -->
+    <aside class="test-sidebar">
+      <div class="palette-title">Question Palette</div>
+
+      <div class="palette-legend">
+        <div class="legend-item"><div class="legend-dot answered"></div> Answered</div>
+        <div class="legend-item"><div class="legend-dot unanswered"></div> Not Answered</div>
+        <div class="legend-item"><div class="legend-dot flagged"></div> Marked for Review</div>
+        <div class="legend-item"><div class="legend-dot current"></div> Current</div>
+      </div>
+
+      <div class="palette-grid" id="mcq-palette">
+        <!-- Buttons injected by JS -->
+      </div>
+
+      <div class="palette-stats">
+        <div class="stat-row"><span class="stat-label">Answered</span><span class="stat-val green" id="stat-answered">0</span></div>
+        <div class="stat-row"><span class="stat-label">Not Answered</span><span class="stat-val" id="stat-unanswered">10</span></div>
+        <div class="stat-row"><span class="stat-label">Flagged</span><span class="stat-val orange" id="stat-flagged">0</span></div>
+      </div>
+
+      <button class="btn btn-outline" style="width:100%; margin-bottom:8px;" onclick="goToSection('coding')">
+        Go to Coding →
+      </button>
+      <button class="btn btn-danger btn-sm" style="width:100%;" onclick="goToSection('submit')">
+        Review &amp; Submit
+      </button>
+    </aside>
+
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- SECTION: CODING                                            -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<section class="page-section" id="section-coding">
+
+  <!-- Problem Nav -->
+  <div style="padding: 14px 24px; border-bottom: 1px solid var(--border); display:flex; align-items:center; gap:16px; background:var(--bg-surface);">
+    <span style="font-family:var(--font-display); font-size:12px; text-transform:uppercase; letter-spacing:1px; color:var(--text-muted); font-weight:700;">Problems:</span>
+    <div class="problem-nav" id="coding-problem-nav">
+      <!-- Nav buttons injected by JS -->
+    </div>
+    <div style="margin-left:auto; display:flex; gap:8px;">
+      <button class="btn btn-secondary btn-sm" onclick="goToSection('mcq')">← MCQ</button>
+      <button class="btn btn-danger btn-sm" onclick="goToSection('submit')">Submit Test</button>
+    </div>
+  </div>
+
+  <div class="coding-layout">
+
+    <!-- Problem Panel -->
+    <div class="problem-panel" id="coding-problem-panel">
+      <!-- Injected by JS -->
+    </div>
+
+    <!-- Editor Panel -->
+    <div class="editor-panel">
+      <div class="editor-toolbar">
+        <div class="language-label">Selected Language: <strong id="selected-language-label">Python</strong></div>
+        <div class="save-status">
+          <div class="save-dot" id="save-dot"></div>
+          <span id="save-status-text">Auto-save enabled</span>
+        </div>
+        <div class="editor-actions">
+          <button class="btn btn-secondary btn-sm" onclick="resetCode()">↺ Reset</button>
+        </div>
+      </div>
+      <textarea
+        class="code-editor"
+        id="code-editor"
+        placeholder="// Start coding here..."
+        spellcheck="false"
+        onkeydown="handleEditorTab(event)"
+        oninput="onCodeChange()"
+      ></textarea>
+    </div>
+
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- SECTION: SUBMIT                                            -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<section class="page-section" id="section-submit">
+  <div class="submit-page">
+    <h1>Review &amp; Submit</h1>
+    <p class="sub">Please review your responses before final submission. This action cannot be undone.</p>
+
+    <!-- Summary Grid -->
+    <div class="summary-grid">
+      <div class="summary-card">
+        <h3>📝 MCQ Summary</h3>
+        <div class="summary-stat">
+          <span class="s-label">Total Questions</span>
+          <span class="s-val">30</span>
+        </div>
+        <div class="summary-stat">
+          <span class="s-label">Answered</span>
+          <span class="s-val green" id="submit-mcq-answered">0</span>
+        </div>
+        <div class="summary-stat">
+          <span class="s-label">Not Answered</span>
+          <span class="s-val red" id="submit-mcq-unanswered">30</span>
+        </div>
+        <div class="summary-stat">
+          <span class="s-label">Flagged</span>
+          <span class="s-val orange" id="submit-mcq-flagged">0</span>
+        </div>
+      </div>
+      <div class="summary-card">
+        <h3>💻 Coding Summary</h3>
+        <div class="summary-stat">
+          <span class="s-label">Total Problems</span>
+          <span class="s-val">5</span>
+        </div>
+        <div class="summary-stat">
+          <span class="s-label">Attempted</span>
+          <span class="s-val green" id="submit-code-attempted">0</span>
+        </div>
+        <div class="summary-stat">
+          <span class="s-label">Not Attempted</span>
+          <span class="s-val red" id="submit-code-unattempted">5</span>
+        </div>
+        <div class="summary-stat">
+          <span class="s-label">Tab Switches</span>
+          <span class="s-val orange" id="submit-tab-switches">0</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Already Submitted State -->
+    <div id="submitted-state" class="submitted-banner hidden">
+      <h2>✅ Test Submitted Successfully</h2>
+      <p>Your responses have been recorded. You may close this window.</p>
+    </div>
+
+    <!-- Pre-submit state -->
+    <div id="pre-submit-state">
+      <div class="confirm-box">
+        <h3>Before you submit</h3>
+        <ul class="warning-list">
+          <li>Once submitted, you cannot go back and change any answers.</li>
+          <li>Unanswered questions will be marked as skipped.</li>
+          <li>Make sure you have reviewed all your answers.</li>
+        </ul>
+        <label class="confirm-check">
+          <input type="checkbox" id="confirm-checkbox" onchange="onConfirmCheck()" />
+          <span>I confirm that I have reviewed all my answers and I am ready to submit the test.</span>
+        </label>
+      </div>
+
+      <div class="submit-actions">
+        <button class="btn btn-secondary" onclick="goToSection('mcq')">← Back to MCQ</button>
+        <button class="btn btn-secondary" onclick="goToSection('coding')">← Back to Coding</button>
+        <button class="btn btn-danger btn-lg" id="final-submit-btn" disabled onclick="handleFinalSubmit()">
+          🔒 Submit Test
+        </button>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- MAIN SCRIPT                                                -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<script>
+// ─────────────────────────────────────────────────────────────
+// Firebase Config — REPLACE WITH YOUR OWN CONFIG
+// ─────────────────────────────────────────────────────────────
+const firebaseConfig = {
+  apiKey: "AIzaSyDPmgc6xQp3LKh0P8iX7dqDZWXMXd3HFbs",
+  authDomain: "sanr-onlinetest-1b078.firebaseapp.com",
+  projectId: "sanr-onlinetest-1b078",
+  storageBucket: "sanr-onlinetest-1b078.firebasestorage.app",
+  messagingSenderId: "225906289788",
+  appId: "1:225906289788:web:f85087da8a6f191fb3adf9"
+};
+
+
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const db = firebase.firestore();
+
+// Enable offline persistence
+db.enablePersistence({ synchronizeTabs: true }).catch(err => {
+  console.warn('Persistence:', err.code);
+});
+
+// ─────────────────────────────────────────────────────────────
+// Test Questions (Dynamic Loading)
+// ─────────────────────────────────────────────────────────────
+let MCQ_QUESTIONS = []; // Will be populated dynamically with 30 random questions from JSON
+
+// Load 100 questions from JSON and randomly select 30 for each candidate
+async function loadAndSelectMCQQuestions() {
+  try {
+    const response = await fetch('data/100_mcq_questions.json');
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    const data = await response.json();
+    const allQuestions = data.mcq || [];
+    
+    if (allQuestions.length === 0) {
+      console.error('No questions found in JSON file');
+      return false;
+    }
+
+    // Fisher-Yates shuffle algorithm
+    const shuffled = [...allQuestions];
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+
+    // Select first 30 questions
+    MCQ_QUESTIONS = shuffled.slice(0, 30);
+    console.log(`✓ Loaded ${MCQ_QUESTIONS.length} MCQ questions (randomly selected from ${allQuestions.length})`);
+    return true;
+  } catch (err) {
+    console.error('Failed to load MCQ questions:', err);
+    showToast('Error loading questions. Please refresh the page.', 'error');
+    return false;
+  }
+}
+
+const CODING_QUESTIONS = [
+  {
+    id:"code_1", title:"Two Sum", difficulty:"Easy",
+    description:"Given an array of integers <code>nums</code> and an integer <code>target</code>, return the indices of the two numbers that add up to <code>target</code>. You may assume each input has exactly one solution.",
+    examples:[
+      { input:"nums = [2, 7, 11, 15], target = 9", output:"[0, 1]", explanation:"nums[0] + nums[1] = 2 + 7 = 9" },
+      { input:"nums = [3, 2, 4], target = 6", output:"[1, 2]", explanation:"nums[1] + nums[2] = 2 + 4 = 6" }
+    ],
+    constraints:["2 ≤ nums.length ≤ 10⁴","-10⁹ ≤ nums[i] ≤ 10⁹","Only one valid answer exists"],
+    starterCode:{
+      javascript:"function twoSum(nums, target) {\n  // Write your solution here\n  \n}",
+      python:"def two_sum(nums, target):\n    # Write your solution here\n    pass",
+      java:"class Solution {\n    public int[] twoSum(int[] nums, int target) {\n        // Write your solution here\n        return new int[]{};\n    }\n}",
+      c:"int* twoSum(int* nums, int numsSize, int target, int* returnSize) {\n    // Write your solution here\n    return NULL;\n}"
+    }
+  },
+  {
+    id:"code_2", title:"Palindrome Check", difficulty:"Easy",
+    description:"Write a function that checks whether a given string is a palindrome. Ignore case and non-alphanumeric characters.",
+    examples:[
+      { input:'s = "A man, a plan, a canal: Panama"', output:"true", explanation:"Filtered: 'amanaplanacanalpanama' is a palindrome" },
+      { input:'s = "race a car"', output:"false", explanation:"Filtered: 'raceacar' is not a palindrome" }
+    ],
+    constraints:["1 ≤ s.length ≤ 2 × 10⁵","s consists of printable ASCII characters"],
+    starterCode:{
+      javascript:"function isPalindrome(s) {\n  // Write your solution here\n  \n}",
+      python:"def is_palindrome(s):\n    # Write your solution here\n    pass",
+      java:"class Solution {\n    public boolean isPalindrome(String s) {\n        // Write your solution here\n        return false;\n    }\n}",
+      c:"bool isPalindrome(char* s) {\n    // Write your solution here\n    return false;\n}"
+    }
+  },
+  {
+    id:"code_3", title:"Fibonacci Sequence", difficulty:"Medium",
+    description:"Given a number <code>n</code>, return the <code>n</code>-th Fibonacci number using an efficient approach (0-indexed: F(0)=0, F(1)=1, F(2)=1...).",
+    examples:[
+      { input:"n = 10", output:"55", explanation:"The 10th Fibonacci number is 55" },
+      { input:"n = 0", output:"0", explanation:"F(0) = 0 by definition" }
+    ],
+    constraints:["0 ≤ n ≤ 30"],
+    starterCode:{
+      javascript:"function fibonacci(n) {\n  // Write your optimized solution here\n  \n}",
+      python:"def fibonacci(n):\n    # Write your optimized solution here\n    pass",
+      java:"class Solution {\n    public int fibonacci(int n) {\n        // Write your optimized solution here\n        return 0;\n    }\n}",
+      c:"int fibonacci(int n) {\n    // Write your optimized solution here\n    return 0;\n}"
+    }
+  },
+  {
+    id:"code_4", title:"Valid Parentheses", difficulty:"Medium",
+    description:"Given a string containing just the characters '(', ')', '{', '}', '[' and ']', determine if the input string is valid. An input string is valid if open brackets are closed by the same type of brackets in the correct order.",
+    examples:[
+      { input:'s = "()[]{}"', output:"true", explanation:"All brackets are paired and ordered correctly." },
+      { input:'s = "(]"', output:"false", explanation:"Brackets are not correctly matched." }
+    ],
+    constraints:["1 ≤ s.length ≤ 10⁴"],
+    starterCode:{
+      javascript:"function isValid(s) {\n  // Write your solution here\n  \n}",
+      python:"def is_valid(s):\n    # Write your solution here\n    pass",
+      java:"class Solution {\n    public boolean isValid(String s) {\n        // Write your solution here\n        return false;\n    }\n}",
+      c:"bool isValid(char* s) {\n    // Write your solution here\n    return false;\n}"
+    }
+  },
+  {
+    id:"code_5", title:"Merge Two Sorted Arrays", difficulty:"Medium",
+    description:"Given two sorted arrays, merge them into a single sorted array. The result should preserve the sorted order of all elements.",
+    examples:[
+      { input:"nums1 = [1,2,3], nums2 = [2,5,6]", output:"[1,2,2,3,5,6]", explanation:"Merged arrays remain sorted." },
+      { input:"nums1 = [0], nums2 = [1]", output:"[0,1]", explanation:"Simple merge of two sorted arrays." }
+    ],
+    constraints:["1 ≤ nums1.length, nums2.length ≤ 10⁴"],
+    starterCode:{
+      javascript:"function mergeSortedArrays(nums1, nums2) {\n  // Write your solution here\n  \n}",
+      python:"def merge_sorted_arrays(nums1, nums2):\n    # Write your solution here\n    pass",
+      java:"class Solution {\n    public int[] mergeSortedArrays(int[] nums1, int[] nums2) {\n        // Write your solution here\n        return new int[]{};\n    }\n}",
+      c:"int* mergeSortedArrays(int* nums1, int nums1Size, int* nums2, int nums2Size, int* returnSize) {\n    // Write your solution here\n    return NULL;\n}"
+    }
+  }
+];
+
+const TEST_DURATION_MS = 120 * 60 * 1000;
+
+// ─────────────────────────────────────────────────────────────
+// Write Queue & Retry System (CRITICAL for concurrency)
+// ─────────────────────────────────────────────────────────────
+const writeQueue = {
+  queue: {},  // { userId: [] }
+  processing: {},  // { userId: false }
+  MAX_RETRIES: 5,
+  RETRY_DELAYS: [100, 200, 500, 1000, 2000],  // exponential backoff
+  BATCH_DELAY: 500  // ms between batch processing
+};
+
+// Write to Firestore with automatic retry & queue
+async function writeWithRetry(uid, operation) {
+  if (!uid) {
+    console.error('⚠️ Write failed: No user ID', operation);
+    return false;
+  }
+
+  return new Promise((resolve) => {
+    if (!writeQueue.queue[uid]) writeQueue.queue[uid] = [];
+    writeQueue.queue[uid].push({ operation, resolve, retries: 0 });
+    processWriteQueue(uid);
+  });
+}
+
+async function processWriteQueue(uid) {
+  if (writeQueue.processing[uid]) return;
+  if (!writeQueue.queue[uid] || writeQueue.queue[uid].length === 0) return;
+
+  writeQueue.processing[uid] = true;
+
+  while (writeQueue.queue[uid].length > 0) {
+    const task = writeQueue.queue[uid][0];
+    const success = await executeWithRetry(task.operation, task.retries);
+    
+    if (success) {
+      writeQueue.queue[uid].shift();
+      task.resolve(true);
+      console.log(`✓ Write succeeded (${uid}):`, task.operation.type);
+    } else {
+      if (task.retries < writeQueue.MAX_RETRIES) {
+        task.retries++;
+        const delay = writeQueue.RETRY_DELAYS[Math.min(task.retries - 1, writeQueue.RETRY_DELAYS.length - 1)];
+        console.warn(`⚠️ Write retry ${task.retries}/${writeQueue.MAX_RETRIES} (${delay}ms):`, task.operation.type);
+        await new Promise(r => setTimeout(r, delay));
+      } else {
+        console.error(`❌ Write FAILED after ${writeQueue.MAX_RETRIES} retries:`, task.operation.type);
+        writeQueue.queue[uid].shift();
+        task.resolve(false);
+        showToast('⚠️ Failed to save data. Please check your connection.', 'error');
+      }
+    }
+    
+    await new Promise(r => setTimeout(r, writeQueue.BATCH_DELAY));
+  }
+
+  writeQueue.processing[uid] = false;
+}
+
+async function executeWithRetry(operation, attempt = 0) {
+  try {
+    switch (operation.type) {
+      case 'SET_USER':
+        await db.collection('users').doc(operation.uid).set(operation.data, { merge: false });
+        return true;
+      
+      case 'UPDATE_USER':
+        await db.collection('users').doc(operation.uid).update(operation.data);
+        return true;
+      
+      case 'SET_MCQ':
+        await db.collection('users').doc(operation.uid).collection('mcqResponses').doc(operation.questionId).set(operation.data, { merge: true });
+        return true;
+      
+      case 'SET_CODING':
+        await db.collection('users').doc(operation.uid).collection('codingResponses').doc(operation.questionId).set(operation.data, { merge: true });
+        return true;
+      
+      case 'DELETE_MCQ':
+        await db.collection('users').doc(operation.uid).collection('mcqResponses').doc(operation.questionId).delete();
+        return true;
+      
+      case 'INCREMENT_TABSWITCH':
+        await db.collection('users').doc(operation.uid).update({
+          tabSwitches: firebase.firestore.FieldValue.increment(1),
+          lastTabSwitch: firebase.firestore.FieldValue.serverTimestamp()
+        });
+        return true;
+      
+      case 'FINAL_SUBMIT':
+        await db.collection('users').doc(operation.uid).update(operation.data);
+        return true;
+      
+      default:
+        return false;
+    }
+  } catch (err) {
+    console.error(`Write error (${operation.type}):`, err.code, err.message);
+    
+    // Only retry on specific recoverable errors
+    const retryable = [
+      'permission-denied',  // might be temporary
+      'resource-exhausted',  // quota limit - CRITICAL
+      'deadline-exceeded',
+      'unavailable',
+      'internal',
+      'unauthenticated'
+    ];
+    
+    return retryable.includes(err.code) && attempt < 3;
+  }
+}
+
+// ─────────────────────────────────────────────────────────────
+// App State
+// ─────────────────────────────────────────────────────────────
+const appState = {
+  user: null,
+  userData: null,
+  currentSection: 'welcome',
+  currentMcqIndex: 0,
+  currentCodingIndex: 0,
+  mcqAnswers: {},        // { questionId: optionIndex }
+  mcqFlags: {},          // { questionId: bool }
+  codingAnswers: {},     // { questionId: { code, language } }
+  selectedLanguage: null,
+  timerInterval: null,
+  startTimestamp: null,
+  tabSwitchCount: 0,
+  debounceTimers: {},
+  isSubmitted: false,
+  initialized: false,
+  lastWriteStatus: 'idle'  // 'idle', 'queued', 'pending'
+};
+
+// ─────────────────────────────────────────────────────────────
+// Utilities
+// ─────────────────────────────────────────────────────────────
+function showToast(msg, type = 'info') {
+  const c = document.getElementById('toast-container');
+  const el = document.createElement('div');
+  el.className = `toast ${type}`;
+  el.textContent = msg;
+  c.appendChild(el);
+  setTimeout(() => el.remove(), 3500);
+}
+
+function debounce(key, fn, delay = 1500) {
+  if (appState.debounceTimers[key]) clearTimeout(appState.debounceTimers[key]);
+  appState.debounceTimers[key] = setTimeout(() => {
+    fn();
+    delete appState.debounceTimers[key];
+  }, delay);
+}
+
+function setButtonLoading(btnId, loading, text) {
+  const btn = document.getElementById(btnId);
+  if (!btn) return;
+  btn.disabled = loading;
+  btn.innerHTML = loading ? `<span class="spinner"></span> ${text}` : text;
+}
+
+function navigateTo(section) {
+  appState.currentSection = section;
+  document.querySelectorAll('.page-section').forEach(s => s.classList.remove('active'));
+  document.getElementById(`section-${section}`).classList.add('active');
+
+  // Update header tabs
+  document.querySelectorAll('.section-tab').forEach(t => t.classList.remove('active'));
+  const activeTab = document.getElementById(`tab-${section}`);
+  if (activeTab) activeTab.classList.add('active');
+
+  window.scrollTo(0, 0);
+}
+
+// ─────────────────────────────────────────────────────────────
+// Auth Mode Toggle
+// ─────────────────────────────────────────────────────────────
+function toggleAuthMode(mode) {
+  if (mode === 'register') {
+    document.getElementById('login-form-wrap').classList.add('hidden');
+    document.getElementById('register-form-wrap').classList.remove('hidden');
+  } else {
+    document.getElementById('register-form-wrap').classList.add('hidden');
+    document.getElementById('login-form-wrap').classList.remove('hidden');
+  }
+}
+
+// ─────────────────────────────────────────────────────────────
+// Auth: Register
+// ─────────────────────────────────────────────────────────────
+async function handleRegister() {
+  const name = document.getElementById('reg-name').value.trim();
+  const email = document.getElementById('reg-email').value.trim();
+  const phone = document.getElementById('reg-phone').value.trim();
+  const education = document.getElementById('reg-education').value.trim();
+  const college = document.getElementById('reg-college').value.trim();
+  const passoutYear = document.getElementById('reg-passout-year').value.trim();
+  const parentName = document.getElementById('reg-parent').value.trim();
+  const parentPhone = document.getElementById('reg-parent-phone').value.trim();
+  const address = document.getElementById('reg-address').value.trim();
+  const language = document.getElementById('reg-language').value;
+  const errEl = document.getElementById('register-error');
+
+  errEl.classList.remove('show');
+
+  if (!name || !email || !phone || !education || !college || !passoutYear || !parentName || !parentPhone || !address || !language) {
+    errEl.textContent = 'All required fields are required.';
+    errEl.classList.add('show');
+    return;
+  }
+
+  setButtonLoading('register-btn', true, 'Starting test...');
+
+  let authResult;
+  let uid;
+  let startTime = Date.now();
+
+  try {
+    authResult = auth.currentUser ? { user: auth.currentUser } : await auth.signInAnonymously();
+    uid = authResult.user.uid;
+  } catch (err) {
+    console.warn('Anonymous auth failed, continuing locally:', err);
+    uid = `local_${Date.now()}`;
+    authResult = { user: { uid } };
+  }
+
+  appState.user = authResult.user;
+
+  // Check if already registered
+  try {
+    const doc = await db.collection('users').doc(uid).get();
+    if (doc.exists) {
+      const data = doc.data();
+      appState.userData = { ...data, selectedLanguage: data.selectedLanguage || language };
+      appState.selectedLanguage = appState.userData.selectedLanguage;
+
+      // Always start fresh test, even if previously submitted
+      // Restore start time or set new - USE WRITE QUEUE
+      appState.startTimestamp = startTime;
+      await writeWithRetry(uid, {
+        type: 'UPDATE_USER',
+        uid: uid,
+        data: {
+          startTime: firebase.firestore.Timestamp.fromMillis(startTime),
+          status: 'in_progress'
+        }
+      });
+
+      // Clear previous responses for fresh start
+      appState.mcqAnswers = {};
+      appState.mcqFlags = {};
+      appState.codingAnswers = {};
+      appState.tabSwitchCount = 0;
+
+      // Load questions before starting test
+      const questionsLoaded = await loadAndSelectMCQQuestions();
+      if (!questionsLoaded) {
+        setButtonLoading('register-btn', false, 'Start Test');
+        errEl.textContent = 'Failed to load questions. Please try again.';
+        errEl.classList.add('show');
+        return;
+      }
+
+      onTestStarted();
+      return;
+    }
+  } catch (err) {
+    console.warn('Failed to check existing user; proceeding with registration.', err);
+  }
+
+  // New registration - USE WRITE QUEUE WITH RETRY
+  const userData = {
+    name,
+    email,
+    phone,
+    education,
+    college,
+    passoutYear,
+    parentName,
+    parentPhone,
+    address,
+    selectedLanguage: language,
+    startTime: firebase.firestore.Timestamp.fromMillis(startTime),
+    endTime: null,
+    status: 'in_progress',
+    tabSwitches: 0,
+    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+  };
+
+  try {
+    const writeSuccess = await writeWithRetry(uid, {
+      type: 'SET_USER',
+      uid: uid,
+      data: userData
+    });
+    
+    if (!writeSuccess) {
+      console.error('❌ CRITICAL: User registration write failed after retries!');
+      errEl.textContent = 'Failed to register. Please check connection and try again.';
+      errEl.classList.add('show');
+      setButtonLoading('register-btn', false, 'Start Test');
+      return;
+    }
+  } catch (err) {
+    console.error('Registration error:', err);
+    errEl.textContent = 'Error during registration: ' + err.message;
+    errEl.classList.add('show');
+    setButtonLoading('register-btn', false, 'Start Test');
+    return;
+  }
+
+  appState.userData = {
+    name,
+    email,
+    phone,
+    education,
+    college,
+    passoutYear,
+    parentName,
+    parentPhone,
+    address,
+    selectedLanguage: language
+  };
+  appState.selectedLanguage = language;
+  appState.startTimestamp = startTime;
+
+  // Load questions before starting test
+  const questionsLoaded = await loadAndSelectMCQQuestions();
+  if (!questionsLoaded) {
+    setButtonLoading('register-btn', false, 'Start Test');
+    return;
+  }
+
+  onTestStarted();
+}
+
+// ─────────────────────────────────────────────────────────────
+// Auth: Login
+// ─────────────────────────────────────────────────────────────
+async function handleLogin() {
+  const email = document.getElementById('login-email').value.trim();
+  const password = document.getElementById('login-password').value;
+  const errEl = document.getElementById('login-error');
+
+  errEl.classList.remove('show');
+
+  if (!email || !password) {
+    errEl.textContent = 'Please enter email and password.';
+    errEl.classList.add('show');
+    return;
+  }
+
+  setButtonLoading('login-btn', true, 'Signing in...');
+
+  try {
+    const cred = await auth.signInWithEmailAndPassword(email, password);
+    appState.user = cred.user;
+
+    // Load existing data
+    const doc = await db.collection('users').doc(cred.user.uid).get();
+    if (!doc.exists) {
+      errEl.textContent = 'User data not found. Please register first.';
+      errEl.classList.add('show');
+      await auth.signOut();
+      setButtonLoading('login-btn', false, 'Sign In & Start Test');
+      return;
+    }
+
+    const data = doc.data();
+    appState.userData = data;
+    appState.selectedLanguage = data.selectedLanguage || 'python';
+
+    if (data.status === 'submitted') {
+      // Show submitted state
+      navigateTo('submit');
+      document.getElementById('app-header').classList.remove('hidden');
+      document.getElementById('pre-submit-state').classList.add('hidden');
+      document.getElementById('submitted-state').classList.remove('hidden');
+      return;
+    }
+
+    // Restore start time
+    if (data.startTime) {
+      appState.startTimestamp = data.startTime.toMillis();
+    } else {
+      // First time login — set start time
+      appState.startTimestamp = Date.now();
+      await db.collection('users').doc(cred.user.uid).update({
+        startTime: firebase.firestore.Timestamp.fromMillis(appState.startTimestamp)
+      });
+    }
+
+    await loadUserResponses();
+    
+    // Load questions before starting test
+    const questionsLoaded = await loadAndSelectMCQQuestions();
+    if (!questionsLoaded) {
+      setButtonLoading('login-btn', false, 'Sign In & Start Test');
+      errEl.textContent = 'Failed to load questions. Please try again.';
+      errEl.classList.add('show');
+      return;
+    }
+    
+    onTestStarted();
+  } catch (err) {
+    console.error('FULL ERROR:', err);           // ← add this line
+    errEl.textContent = err.code + ': ' + err.message;  // ← show raw error
+    errEl.classList.add('show');
+    setButtonLoading('login-btn', false, 'Sign In & Start Test');
+  }
+}
+
+function friendlyAuthError(code) {
+  const map = {
+    'auth/email-already-in-use': 'This email is already registered. Please sign in.',
+    'auth/invalid-email': 'Invalid email address.',
+    'auth/weak-password': 'Password is too weak. Use at least 6 characters.',
+    'auth/user-not-found': 'No account found with this email.',
+    'auth/wrong-password': 'Incorrect password.',
+    'auth/too-many-requests': 'Too many attempts. Please wait and try again.',
+    'auth/network-request-failed': 'Network error. Check your connection.'
+  };
+  return map[code] || 'An error occurred. Please try again.';
+}
+
+// ─────────────────────────────────────────────────────────────
+// Load Saved Responses
+// ─────────────────────────────────────────────────────────────
+async function loadUserResponses() {
+  const uid = appState.user.uid;
+  try {
+    const mcqSnap = await db.collection('users').doc(uid).collection('mcqResponses').get();
+    mcqSnap.forEach(d => {
+      const data = d.data();
+      if (data.selectedOption !== undefined) appState.mcqAnswers[data.questionId] = data.selectedOption;
+      if (data.flagged) appState.mcqFlags[data.questionId] = true;
+    });
+
+    const codeSnap = await db.collection('users').doc(uid).collection('codingResponses').get();
+    codeSnap.forEach(d => {
+      const data = d.data();
+      appState.codingAnswers[data.questionId] = { code: data.code, language: data.language };
+    });
+  } catch (e) {
+    console.error('Load responses:', e);
+  }
+}
+
+// ─────────────────────────────────────────────────────────────
+// Test Start
+// ─────────────────────────────────────────────────────────────
+function syncUserHeaderAndLanguage() {
+  if (!appState.selectedLanguage && appState.userData?.selectedLanguage) {
+    appState.selectedLanguage = appState.userData.selectedLanguage;
+  }
+
+  if (appState.selectedLanguage && appState.userData) {
+    appState.userData.selectedLanguage = appState.selectedLanguage;
+  }
+
+  const name = appState.userData?.name || appState.user?.email || '';
+  document.getElementById('header-username').textContent = name;
+  document.getElementById('selected-language-label').textContent = appState.selectedLanguage === 'c' ? 'C' : 'Python';
+}
+
+function onTestStarted() {
+  const header = document.getElementById('app-header');
+  header.classList.remove('hidden');
+
+  syncUserHeaderAndLanguage();
+
+  navigateTo('mcq');
+  initTabWatcher();
+  startTimer();
+
+  try {
+    initMcqSection();
+    initCodingSection();
+  } catch (e) {
+    console.error('Test initialization failed:', e);
+  }
+
+  showToast('Test started! Good luck 🚀', 'success');
+}
+
+// ─────────────────────────────────────────────────────────────
+// Timer
+// ─────────────────────────────────────────────────────────────
+function startTimer() {
+  function tick() {
+    const elapsed = Date.now() - appState.startTimestamp;
+    const remaining = Math.max(0, TEST_DURATION_MS - elapsed);
+    const mins = Math.floor(remaining / 60000);
+    const secs = Math.floor((remaining % 60000) / 1000);
+    const display = `${String(mins).padStart(2,'0')}:${String(secs).padStart(2,'0')}`;
+    document.getElementById('timer-display').textContent = display;
+
+    const block = document.getElementById('timer-block');
+    block.className = 'timer-block';
+    if (remaining <= 5 * 60000) block.classList.add('danger');
+    else if (remaining <= 15 * 60000) block.classList.add('warning');
+
+    if (remaining <= 0) {
+      clearInterval(appState.timerInterval);
+      showToast('⏱ Time is up! Auto-submitting...', 'error');
+      handleFinalSubmit(true);
+    }
+  }
+  tick();
+  appState.timerInterval = setInterval(tick, 1000);
+}
+
+// ─────────────────────────────────────────────────────────────
+// Tab Watcher
+// ─────────────────────────────────────────────────────────────
+function initTabWatcher() {
+  document.addEventListener('visibilitychange', async () => {
+    if (document.hidden && appState.currentSection !== 'welcome' && !appState.isSubmitted) {
+      appState.tabSwitchCount++;
+      if (appState.user) {
+        writeWithRetry(appState.user.uid, {
+          type: 'INCREMENT_TABSWITCH',
+          uid: appState.user.uid
+        }).catch(() => {});
+      }
+      const el = document.createElement('div');
+      el.id = 'tab-warning';
+      el.innerHTML = `<div class="tab-warning-inner">⚠️ Tab switching detected (${appState.tabSwitchCount} time${appState.tabSwitchCount > 1 ? 's' : ''})<button onclick="this.parentElement.parentElement.remove()">Dismiss</button></div>`;
+      document.body.appendChild(el);
+      setTimeout(() => el && el.remove(), 5000);
+    }
+  });
+}
+
+// ─────────────────────────────────────────────────────────────
+// Section Navigation
+// ─────────────────────────────────────────────────────────────
+function goToSection(section) {
+  if (appState.isSubmitted && (section === 'mcq' || section === 'coding')) {
+    showToast('Test already submitted. You cannot go back.', 'error');
+    return;
+  }
+  if (section === 'submit') updateSubmitSummary();
+  navigateTo(section);
+}
+
+// ─────────────────────────────────────────────────────────────
+// MCQ Section
+// ─────────────────────────────────────────────────────────────
+function initMcqSection() {
+  buildMcqPalette();
+  renderMcqQuestion(0);
+}
+
+function renderMcqQuestion(index) {
+  appState.currentMcqIndex = index;
+  const q = MCQ_QUESTIONS[index];
+
+  document.getElementById('mcq-q-num').textContent = `Q ${index + 1} / ${MCQ_QUESTIONS.length}`;
+  document.getElementById('mcq-section-tag').textContent = q.section;
+  document.getElementById('mcq-question-text').textContent = q.question;
+
+  // Progress
+  const answered = Object.keys(appState.mcqAnswers).length;
+  document.getElementById('mcq-progress-bar').style.width = `${(answered / MCQ_QUESTIONS.length) * 100}%`;
+
+  // Options
+  const optionLetters = ['A', 'B', 'C', 'D'];
+  const listEl = document.getElementById('mcq-options-list');
+  listEl.innerHTML = '';
+
+  q.options.forEach((opt, i) => {
+    const sel = appState.mcqAnswers[q.id] === i;
+    const div = document.createElement('div');
+    div.className = `option-item${sel ? ' selected' : ''}`;
+    div.onclick = () => selectOption(q.id, i);
+    div.innerHTML = `<div class="option-letter">${optionLetters[i]}</div><div class="option-text">${opt}</div>`;
+    listEl.appendChild(div);
+  });
+
+  // Flag button
+  const isFlagged = appState.mcqFlags[q.id];
+  const flagBtn = document.getElementById('mcq-flag-btn');
+  flagBtn.textContent = isFlagged ? '🚩 Unmark Review' : '🚩 Mark for Review';
+  flagBtn.style.color = isFlagged ? 'var(--orange)' : '';
+
+  // Prev/Next
+  document.getElementById('mcq-prev-btn').disabled = index === 0;
+  document.getElementById('mcq-next-btn').textContent = index === MCQ_QUESTIONS.length - 1 ? 'Finish MCQ →' : 'Next →';
+
+  updatePalette();
+  updatePaletteStats();
+}
+
+function selectOption(questionId, optionIndex) {
+  appState.mcqAnswers[questionId] = optionIndex;
+  renderMcqQuestion(appState.currentMcqIndex);
+
+  // Save to Firestore (debounced) with retry queue
+  debounce(`mcq_${questionId}`, () => {
+    if (!appState.user) return;
+    writeWithRetry(appState.user.uid, {
+      type: 'SET_MCQ',
+      uid: appState.user.uid,
+      questionId: questionId,
+      data: {
+        questionId,
+        selectedOption: optionIndex,
+        flagged: appState.mcqFlags[questionId] || false,
+        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+      }
+    }).catch(err => console.error('MCQ save queued but failed:', err));
+  }, 800);
+}
+
+function clearMcqAnswer() {
+  const q = MCQ_QUESTIONS[appState.currentMcqIndex];
+  delete appState.mcqAnswers[q.id];
+  renderMcqQuestion(appState.currentMcqIndex);
+
+  if (appState.user) {
+    writeWithRetry(appState.user.uid, {
+      type: 'DELETE_MCQ',
+      uid: appState.user.uid,
+      questionId: q.id
+    }).catch(() => {});
+  }
+}
+
+function toggleFlag() {
+  const q = MCQ_QUESTIONS[appState.currentMcqIndex];
+  appState.mcqFlags[q.id] = !appState.mcqFlags[q.id];
+  if (!appState.mcqFlags[q.id]) delete appState.mcqFlags[q.id];
+  renderMcqQuestion(appState.currentMcqIndex);
+
+  if (appState.user) {
+    debounce(`flag_${q.id}`, () => {
+      writeWithRetry(appState.user.uid, {
+        type: 'SET_MCQ',
+        uid: appState.user.uid,
+        questionId: q.id,
+        data: { questionId: q.id, flagged: !!appState.mcqFlags[q.id] }
+      }).catch(() => {});
+    }, 500);
+  }
+}
+
+function mcqNav(dir) {
+  const next = appState.currentMcqIndex + dir;
+  if (next < 0) return;
+  if (next >= MCQ_QUESTIONS.length) {
+    goToSection('coding');
+    return;
+  }
+  renderMcqQuestion(next);
+}
+
+function buildMcqPalette() {
+  const grid = document.getElementById('mcq-palette');
+  grid.innerHTML = '';
+  MCQ_QUESTIONS.forEach((q, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'palette-btn';
+    btn.textContent = i + 1;
+    btn.onclick = () => renderMcqQuestion(i);
+    btn.id = `pal-btn-${i}`;
+    grid.appendChild(btn);
+  });
+}
+
+function updatePalette() {
+  MCQ_QUESTIONS.forEach((q, i) => {
+    const btn = document.getElementById(`pal-btn-${i}`);
+    if (!btn) return;
+    btn.className = 'palette-btn';
+    const answered = appState.mcqAnswers[q.id] !== undefined;
+    const flagged = appState.mcqFlags[q.id];
+    if (i === appState.currentMcqIndex) btn.classList.add('current');
+    else if (flagged && answered) btn.classList.add('flagged-answered');
+    else if (flagged) btn.classList.add('flagged');
+    else if (answered) btn.classList.add('answered');
+  });
+}
+
+function updatePaletteStats() {
+  const answered = Object.keys(appState.mcqAnswers).length;
+  const flagged = Object.keys(appState.mcqFlags).length;
+  document.getElementById('stat-answered').textContent = answered;
+  document.getElementById('stat-unanswered').textContent = MCQ_QUESTIONS.length - answered;
+  document.getElementById('stat-flagged').textContent = flagged;
+}
+
+// ─────────────────────────────────────────────────────────────
+// Coding Section
+// ─────────────────────────────────────────────────────────────
+function initCodingSection() {
+  buildCodingNav();
+  renderCodingProblem(0);
+}
+
+function buildCodingNav() {
+  const nav = document.getElementById('coding-problem-nav');
+  nav.innerHTML = '';
+  CODING_QUESTIONS.forEach((q, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'prob-nav-btn';
+    btn.id = `prob-nav-${i}`;
+    btn.textContent = `#${i + 1}: ${q.title}`;
+    btn.onclick = () => renderCodingProblem(i);
+    nav.appendChild(btn);
+  });
+}
+
+function renderCodingProblem(index) {
+  appState.currentCodingIndex = index;
+  const q = CODING_QUESTIONS[index];
+
+  // Update nav
+  document.querySelectorAll('.prob-nav-btn').forEach((b, i) => {
+    b.classList.remove('active');
+    if (appState.codingAnswers[CODING_QUESTIONS[i].id]) b.classList.add('attempted');
+  });
+  document.getElementById(`prob-nav-${index}`).classList.add('active');
+
+  // Problem panel
+  const panel = document.getElementById('coding-problem-panel');
+  const examplesHtml = q.examples.map((ex, i) => `
+    <div class="example-block">
+      <div class="ex-row"><strong>Input:</strong> <span class="ex-val">${ex.input}</span></div>
+      <div class="ex-row"><strong>Output:</strong> <span class="ex-val">${ex.output}</span></div>
+      <div class="ex-note">// ${ex.explanation}</div>
+    </div>`).join('');
+
+  const constraintsHtml = q.constraints.map(c => `<li>${c}</li>`).join('');
+
+  panel.innerHTML = `
+    <div class="problem-title">${q.title}</div>
+    <div class="difficulty-tag ${q.difficulty.toLowerCase()}">${q.difficulty}</div>
+    <div class="problem-desc">${q.description}</div>
+    <div class="examples-section">
+      <h4>Examples</h4>
+      ${examplesHtml}
+    </div>
+    <h4 style="font-family:var(--font-display);font-size:12px;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);margin-bottom:10px;font-weight:700;">Constraints</h4>
+    <ul class="constraints-list">${constraintsHtml}</ul>
+  `;
+
+  // Editor: load saved code or starter
+  const saved = appState.codingAnswers[q.id];
+  const lang = appState.selectedLanguage || saved?.language || appState.userData?.selectedLanguage || 'python';
+  if (!appState.selectedLanguage) {
+    appState.selectedLanguage = lang;
+  }
+  syncUserHeaderAndLanguage();
+  const codeValue = (saved?.language === appState.selectedLanguage ? saved?.code : null) || q.starterCode[appState.selectedLanguage] || q.starterCode[lang] || '';
+  document.getElementById('code-editor').value = codeValue;
+  updateSaveStatus('idle');
+}
+
+function onCodeChange() {
+  updateSaveStatus('saving');
+  const q = CODING_QUESTIONS[appState.currentCodingIndex];
+  const code = document.getElementById('code-editor').value;
+  const lang = appState.selectedLanguage || 'python';
+
+  appState.codingAnswers[q.id] = { code, language: lang };
+
+  debounce(`code_${q.id}`, async () => {
+    if (!appState.user) return;
+    try {
+      const success = await writeWithRetry(appState.user.uid, {
+        type: 'SET_CODING',
+        uid: appState.user.uid,
+        questionId: q.id,
+        data: { questionId: q.id, code, language: lang, updatedAt: firebase.firestore.FieldValue.serverTimestamp() }
+      });
+      
+      if (success) {
+        updateSaveStatus('saved');
+        document.getElementById(`prob-nav-${appState.currentCodingIndex}`)?.classList.add('attempted');
+      } else {
+        updateSaveStatus('idle');
+      }
+    } catch (e) {
+      console.error('Code save:', e);
+      updateSaveStatus('idle');
+    }
+  }, 1500);
+}
+
+function updateSaveStatus(status) {
+  const dot = document.getElementById('save-dot');
+  const text = document.getElementById('save-status-text');
+  dot.className = 'save-dot';
+  if (status === 'saving') { dot.classList.add('saving'); text.textContent = 'Saving...'; }
+  else if (status === 'saved') { dot.classList.add('saved'); text.textContent = 'Saved'; }
+  else { text.textContent = 'Auto-save on'; }
+}
+
+function resetCode() {
+  const q = CODING_QUESTIONS[appState.currentCodingIndex];
+  const lang = appState.selectedLanguage || 'python';
+  if (confirm('Reset code to starter template? Your current code will be lost.')) {
+    document.getElementById('code-editor').value = q.starterCode[lang] || '';
+  }
+}
+
+function handleEditorTab(e) {
+  if (e.key === 'Tab') {
+    e.preventDefault();
+    const ta = e.target;
+    const start = ta.selectionStart;
+    const end = ta.selectionEnd;
+    ta.value = ta.value.substring(0, start) + '  ' + ta.value.substring(end);
+    ta.selectionStart = ta.selectionEnd = start + 2;
+  }
+}
+
+// ─────────────────────────────────────────────────────────────
+// Submit
+// ─────────────────────────────────────────────────────────────
+function updateSubmitSummary() {
+  const mcqAnswered = Object.keys(appState.mcqAnswers).length;
+  const mcqFlagged = Object.keys(appState.mcqFlags).length;
+  const codeAttempted = Object.keys(appState.codingAnswers).filter(id => appState.codingAnswers[id]?.code?.trim()).length;
+
+  document.getElementById('submit-mcq-answered').textContent = mcqAnswered;
+  document.getElementById('submit-mcq-unanswered').textContent = MCQ_QUESTIONS.length - mcqAnswered;
+  document.getElementById('submit-mcq-flagged').textContent = mcqFlagged;
+  document.getElementById('submit-code-attempted').textContent = codeAttempted;
+  document.getElementById('submit-code-unattempted').textContent = CODING_QUESTIONS.length - codeAttempted;
+  document.getElementById('submit-tab-switches').textContent = appState.tabSwitchCount;
+
+  // Reset checkbox
+  document.getElementById('confirm-checkbox').checked = false;
+  document.getElementById('final-submit-btn').disabled = true;
+}
+
+function onConfirmCheck() {
+  document.getElementById('final-submit-btn').disabled = !document.getElementById('confirm-checkbox').checked;
+}
+
+async function handleFinalSubmit(auto = false) {
+  if (!auto && !document.getElementById('confirm-checkbox').checked) return;
+  if (appState.isSubmitted) return;
+
+  const btn = document.getElementById('final-submit-btn');
+  if (btn) { btn.disabled = true; btn.innerHTML = '<span class="spinner"></span> Submitting...'; }
+
+  appState.isSubmitted = true;
+  clearInterval(appState.timerInterval);
+
+  // Disable MCQ and Coding navigation tabs
+  const tabs = document.querySelectorAll('.section-tab');
+  tabs.forEach(t => {
+    if (t.id === 'tab-mcq' || t.id === 'tab-coding') {
+      t.disabled = true;
+      t.style.opacity = '0.5';
+      t.style.cursor = 'not-allowed';
+      t.onclick = () => showToast('Test already submitted. You cannot go back.', 'error');
+    }
+  });
+
+  const userRef = appState.user && appState.user.uid ? db.collection('users').doc(appState.user.uid) : null;
+
+  try {
+    if (userRef) {
+      const success = await writeWithRetry(appState.user.uid, {
+        type: 'FINAL_SUBMIT',
+        uid: appState.user.uid,
+        data: {
+          endTime: firebase.firestore.FieldValue.serverTimestamp(),
+          status: 'submitted',
+          tabSwitches: appState.tabSwitchCount
+        }
+      });
+
+      if (!success) {
+        console.error('❌ CRITICAL: Final submission write failed!');
+        showToast('⚠️ Submission may have failed. Please refresh to verify.', 'error');
+      }
+    }
+
+    document.getElementById('pre-submit-state').classList.add('hidden');
+    document.getElementById('submitted-state').classList.remove('hidden');
+    if (auto) {
+      document.querySelector('#submitted-state h2').textContent = '⏱ Time Over — Test Submitted';
+      document.querySelector('#submitted-state p').textContent = 'The test time has expired and your answers have been submitted automatically.';
+    }
+    navigateTo('submit');
+    showToast(auto ? '⏱ Time is over! Submitting final answers...' : '✅ Test submitted successfully!', 'success');
+  } catch (e) {
+    console.error('Submit error:', e);
+    document.getElementById('pre-submit-state').classList.add('hidden');
+    document.getElementById('submitted-state').classList.remove('hidden');
+    if (auto) {
+      document.querySelector('#submitted-state h2').textContent = '⏱ Time Over — Test Submitted';
+      document.querySelector('#submitted-state p').textContent = 'The test time has expired and your answers have been submitted automatically.';
+    }
+    navigateTo('submit');
+    showToast(auto ? '⏱ Time is over! Submitting final answers...' : '✅ Test submitted successfully.', 'success');
+  }
+
+  // Scroll to top to show success message
+  window.scrollTo(0, 0);
+}
+
+// ─────────────────────────────────────────────────────────────
+// Auth State Observer
+// ─────────────────────────────────────────────────────────────
+auth.onAuthStateChanged(async (user) => {
+  if (!appState.initialized) {
+    appState.initialized = true;
+    appState.user = user;
+    return;
+  }
+
+  if (user && appState.currentSection === 'welcome' && !appState.user) {
+    appState.user = user;
+    try {
+      const doc = await db.collection('users').doc(user.uid).get();
+      if (!doc.exists) {
+        return;
+      }
+
+      const data = doc.data();
+      appState.userData = data;
+      appState.selectedLanguage = data.selectedLanguage || 'python';
+
+      if (data.status === 'submitted') {
+        document.getElementById('app-header').classList.remove('hidden');
+        document.getElementById('pre-submit-state').classList.add('hidden');
+        document.getElementById('submitted-state').classList.remove('hidden');
+        navigateTo('submit');
+        return;
+      }
+
+      if (data.startTime) {
+        appState.startTimestamp = data.startTime.toMillis();
+      } else {
+        appState.startTimestamp = Date.now();
+        await db.collection('users').doc(user.uid).update({
+          startTime: firebase.firestore.Timestamp.fromMillis(appState.startTimestamp)
+        });
+      }
+
+      await loadUserResponses();
+      
+      // Load questions before starting test
+      const questionsLoaded = await loadAndSelectMCQQuestions();
+      if (!questionsLoaded) {
+        console.error('Failed to load questions in auth observer');
+        return;
+      }
+      
+      onTestStarted();
+    } catch (e) {
+      console.error('Auth state restore:', e);
+    }
+  }
+});
+</script>
+
+</body>
+</html>

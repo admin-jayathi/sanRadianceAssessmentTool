@@ -1,0 +1,343 @@
+[
+  {
+    "id": "c_1",
+    "title": "Second Largest Element",
+    "difficulty": "Easy",
+    "description": "Find the second largest element in an array without sorting.",
+    "examples": [
+      {
+        "input": "[10, 20, 5, 8]",
+        "output": "10",
+        "explanation": "20 is the largest, 10 is the second largest."
+      }
+    ],
+    "constraints": ["2 ≤ n ≤ 10^5"],
+    "starterCode": {
+      "c": "int secondLargest(int arr[], int n) {\n    // your code here\n}"
+    }
+  },
+  {
+    "id": "c_2",
+    "title": "Reverse String",
+    "difficulty": "Easy",
+    "description": "Reverse a string without using library functions.",
+    "examples": [
+      {
+        "input": "hello",
+        "output": "olleh",
+        "explanation": "Characters are reversed."
+      }
+    ],
+    "constraints": ["1 ≤ length ≤ 10^5"],
+    "starterCode": {
+      "c": "void reverse(char *str) {\n    // your code here\n}"
+    }
+  },
+  {
+    "id": "c_3",
+    "title": "Palindrome Check",
+    "difficulty": "Easy",
+    "description": "Check if a given string is a palindrome.",
+    "examples": [
+      {
+        "input": "madam",
+        "output": "true",
+        "explanation": "Same forward and backward."
+      }
+    ],
+    "constraints": ["1 ≤ length ≤ 10^5"],
+    "starterCode": {
+      "c": "int isPalindrome(char *str) {\n    // your code here\n}"
+    }
+  },
+  {
+    "id": "c_4",
+    "title": "Character Frequency",
+    "difficulty": "Medium",
+    "description": "Count frequency of each character in a string.",
+    "examples": [
+      {
+        "input": "aab",
+        "output": "a:2, b:1",
+        "explanation": "Count occurrences of each character."
+      }
+    ],
+    "constraints": ["1 ≤ length ≤ 10^5"],
+    "starterCode": {
+      "c": "void frequency(char *str) {\n    // your code here\n}"
+    }
+  },
+  {
+    "id": "c_5",
+    "title": "Prime Numbers up to N",
+    "difficulty": "Medium",
+    "description": "Find all prime numbers up to a given number N.",
+    "examples": [
+      {
+        "input": "N = 10",
+        "output": "[2,3,5,7]",
+        "explanation": "Prime numbers less than 10."
+      }
+    ],
+    "constraints": ["2 ≤ N ≤ 10^6"],
+    "starterCode": {
+      "c": "void primes(int n) {\n    // your code here\n}"
+    }
+  },
+  {
+    "id": "c_6",
+    "title": "Rotate Array",
+    "difficulty": "Medium",
+    "description": "Rotate an array by k positions.",
+    "examples": [
+      {
+        "input": "[1,2,3,4], k=1",
+        "output": "[4,1,2,3]",
+        "explanation": "Right rotation by 1."
+      }
+    ],
+    "constraints": ["1 ≤ n ≤ 10^5"],
+    "starterCode": {
+      "c": "void rotate(int arr[], int n, int k) {\n    // your code here\n}"
+    }
+  },
+  {
+    "id": "c_7",
+    "title": "Missing Number",
+    "difficulty": "Easy",
+    "description": "Find missing number in array of size n-1 containing numbers from 1 to n.",
+    "examples": [
+      {
+        "input": "[1,2,4,5]",
+        "output": "3",
+        "explanation": "3 is missing."
+      }
+    ],
+    "constraints": ["1 ≤ n ≤ 10^5"],
+    "starterCode": {
+      "c": "int missing(int arr[], int n) {\n    // your code here\n}"
+    }
+  },
+  {
+    "id": "c_8",
+    "title": "Remove Duplicates",
+    "difficulty": "Medium",
+    "description": "Remove duplicates from an array.",
+    "examples": [
+      {
+        "input": "[1,2,2,3]",
+        "output": "[1,2,3]",
+        "explanation": "Duplicates removed."
+      }
+    ],
+    "constraints": ["1 ≤ n ≤ 10^5"],
+    "starterCode": {
+      "c": "void removeDuplicates(int arr[], int n) {\n    // your code here\n}"
+    }
+  },
+  {
+    "id": "c_9",
+    "title": "Swap using Pointers",
+    "difficulty": "Easy",
+    "description": "Swap two numbers using pointers.",
+    "examples": [
+      {
+        "input": "a=5, b=10",
+        "output": "a=10, b=5",
+        "explanation": "Values swapped."
+      }
+    ],
+    "constraints": ["Integer values"],
+    "starterCode": {
+      "c": "void swap(int *a, int *b) {\n    // your code here\n}"
+    }
+  },
+  {
+    "id": "c_10",
+    "title": "Array Intersection",
+    "difficulty": "Medium",
+    "description": "Find intersection of two arrays.",
+    "examples": [
+      {
+        "input": "[1,2,3], [2,3,4]",
+        "output": "[2,3]",
+        "explanation": "Common elements."
+      }
+    ],
+    "constraints": ["1 ≤ n ≤ 10^5"],
+    "starterCode": {
+      "c": "void intersection(int a[], int b[]) {\n    // your code here\n}"
+    }
+  },
+
+  {
+    "id": "c_11",
+    "title": "Custom strlen",
+    "difficulty": "Easy",
+    "description": "Implement your own strlen function.",
+    "examples": [
+      {
+        "input": "hello",
+        "output": "5",
+        "explanation": "Length of string."
+      }
+    ],
+    "constraints": ["1 ≤ length ≤ 10^5"],
+    "starterCode": {
+      "c": "int mystrlen(char *str) {\n    // your code here\n}"
+    }
+  },
+  {
+    "id": "c_12",
+    "title": "Custom strcpy",
+    "difficulty": "Easy",
+    "description": "Implement your own strcpy function.",
+    "examples": [
+      {
+        "input": "src='abc'",
+        "output": "dest='abc'",
+        "explanation": "String copied."
+      }
+    ],
+    "constraints": ["Valid strings"],
+    "starterCode": {
+      "c": "void mystrcpy(char *dest, char *src) {\n    // your code here\n}"
+    }
+  },
+  {
+    "id": "c_13",
+    "title": "Anagram Check",
+    "difficulty": "Medium",
+    "description": "Check if two strings are anagrams.",
+    "examples": [
+      {
+        "input": "listen, silent",
+        "output": "true",
+        "explanation": "Same characters."
+      }
+    ],
+    "constraints": ["1 ≤ length ≤ 10^5"],
+    "starterCode": {
+      "c": "int isAnagram(char *a, char *b) {\n    // your code here\n}"
+    }
+  },
+  {
+    "id": "c_14",
+    "title": "Dynamic Memory Allocation",
+    "difficulty": "Medium",
+    "description": "Allocate memory dynamically and free it.",
+    "examples": [
+      {
+        "input": "size=5",
+        "output": "array allocated",
+        "explanation": "Memory handled using malloc/free."
+      }
+    ],
+    "constraints": ["Valid size"],
+    "starterCode": {
+      "c": "void dynamicMemory(int n) {\n    // your code here\n}"
+    }
+  },
+  {
+    "id": "c_15",
+    "title": "Structure Sorting",
+    "difficulty": "Medium",
+    "description": "Sort student structures by marks.",
+    "examples": [
+      {
+        "input": "students list",
+        "output": "sorted list",
+        "explanation": "Sorted by marks."
+      }
+    ],
+    "constraints": ["1 ≤ n ≤ 10^5"],
+    "starterCode": {
+      "c": "struct Student { int marks; };\nvoid sortStudents(struct Student arr[], int n) {\n}"
+    }
+  },
+  {
+    "id": "c_16",
+    "title": "Linked List",
+    "difficulty": "Medium",
+    "description": "Implement singly linked list operations.",
+    "examples": [
+      {
+        "input": "insert/delete",
+        "output": "updated list",
+        "explanation": "Basic operations."
+      }
+    ],
+    "constraints": ["Dynamic nodes"],
+    "starterCode": {
+      "c": "struct Node { int data; struct Node* next; };"
+    }
+  },
+  {
+    "id": "c_17",
+    "title": "Detect Loop in Linked List",
+    "difficulty": "Medium",
+    "description": "Detect if a linked list has a loop.",
+    "examples": [
+      {
+        "input": "linked list with loop",
+        "output": "true",
+        "explanation": "Cycle exists."
+      }
+    ],
+    "constraints": ["1 ≤ nodes ≤ 10^5"],
+    "starterCode": {
+      "c": "int hasLoop(struct Node *head) {\n    // your code here\n}"
+    }
+  },
+  {
+    "id": "c_18",
+    "title": "File Copy",
+    "difficulty": "Easy",
+    "description": "Copy contents of one file to another.",
+    "examples": [
+      {
+        "input": "file1.txt",
+        "output": "file2.txt",
+        "explanation": "Contents copied."
+      }
+    ],
+    "constraints": ["Valid files"],
+    "starterCode": {
+      "c": "void copyFile(char *src, char *dest) {\n}"
+    }
+  },
+  {
+    "id": "c_19",
+    "title": "Fork Process",
+    "difficulty": "Hard",
+    "description": "Demonstrate fork system call.",
+    "examples": [
+      {
+        "input": "fork()",
+        "output": "parent and child process",
+        "explanation": "Two processes created."
+      }
+    ],
+    "constraints": ["Unix systems"],
+    "starterCode": {
+      "c": "#include <unistd.h>\nint main() {\n}"
+    }
+  },
+  {
+    "id": "c_20",
+    "title": "Memory Allocator",
+    "difficulty": "Hard",
+    "description": "Simulate memory allocation using malloc and free.",
+    "examples": [
+      {
+        "input": "allocate/free",
+        "output": "memory managed",
+        "explanation": "Simulates allocator."
+      }
+    ],
+    "constraints": ["Basic simulation"],
+    "starterCode": {
+      "c": "void allocator() {\n}"
+    }
+  }
+]

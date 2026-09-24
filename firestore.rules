@@ -1,0 +1,21 @@
+rules_version = '2';
+
+service cloud.firestore {
+  function isAdmin() {
+    return request.auth != null && (
+      request.auth.uid == 'ecETlybjvTQen41giHO70B5gSov1' ||
+      request.auth.token.email == 'admin@sanr.com' ||
+      request.auth.token.firebase.identities.email[0] == 'admin@sanr.com'
+    );
+  }
+
+  match /databases/{database}/documents {
+    match /users/{userId} {
+      allow read, write: if request.auth != null && (request.auth.uid == userId || isAdmin());
+
+      match /{subPath=**} {
+        allow read, write: if request.auth != null && (request.auth.uid == userId || isAdmin());
+      }
+    }
+  }
+}

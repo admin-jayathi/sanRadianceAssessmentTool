@@ -1,0 +1,23 @@
+Project Type: Static Web Application
+
+Frontend:
+- HTML
+- CSS
+- JavaScript
+
+Backend:
+- Firebase Authentication
+- Firebase Firestore
+
+External Dependencies (CDN):
+- Firebase App SDK (v10.7.1)
+- Firebase Auth SDK
+- Firebase Firestore SDK
+
+Tools Used:
+- Firebase CLI
+- VS Code
+- Browser (Chrome)
+
+Deployment:
+- Firebase Hosting
