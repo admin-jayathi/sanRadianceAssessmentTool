@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CodeAssess Admin Dashboard</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <style>
+    body { background: #f4f7fb; }
+    .admin-header { max-width: 1200px; margin: 0 auto; padding: 24px 16px; display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+    .admin-header h1 { margin: 0; font-size: 1.5rem; }
+    .admin-header .admin-status { font-size: 0.95rem; color: var(--text-muted); }
+    .admin-card, .summary-grid, .table-wrap { max-width: 1200px; margin: 0 auto 24px; background: #fff; border-radius: 16px; box-shadow: 0 18px 45px rgba(15, 23, 42, 0.06); padding: 24px; }
+    .auth-error { margin-bottom: 16px; color: #b00020; display: none; }
+    .auth-error.show { display: block; }
+    .admin-controls { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin-bottom: 16px; }
+    .admin-controls button { min-width: 140px; }
+    .admin-card h2 { margin-bottom: 12px; }
+    .admin-summary-card { flex: 1 1 250px; min-width: 250px; border: 1px solid #e8ebf2; }
+    .data-table { width: 100%; border-collapse: collapse; }
+    .data-table th, .data-table td { padding: 14px 12px; border-bottom: 1px solid #eef1f7; text-align: left; font-size: 0.95rem; }
+    .data-table th { background: #f8fafd; color: #223045; font-weight: 700; }
+    .data-table tbody tr:hover { background: #fafcff; }
+    .tiny-tag { display: inline-flex; align-items: center; gap: 6px; padding: 4px 8px; border-radius: 999px; font-size: 0.8rem; background: #eef4ff; color: #1f59d9; }
+    .table-wrap { overflow-x: auto; }
+    .hidden { display: none; }
+    .pill { display: inline-block; padding: 4px 10px; border-radius: 999px; background: #eef4ff; color: #1f59d9; font-weight: 600; }
+  </style>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+</head>
+<body>
+  <header class="admin-header">
+    <div>
+      <h1>CodeAssess Admin Dashboard</h1>
+      <p class="admin-status">View candidate performance, attendance, answers, and score summary.</p>
+    </div>
+    <div id="admin-user-info" class="admin-status"></div>
+  </header>
+
+  <section class="admin-card" id="admin-login-card">
+    <h2>Admin Login</h2>
+    <div class="auth-error" id="admin-login-error"></div>
+    <div class="form-group">
+      <label>Admin Email</label>
+      <input type="email" id="admin-email" placeholder="admin@sanr.com" autocomplete="username" />
+    </div>
+    <div class="form-group">
+      <label>Admin Password</label>
+      <input type="password" id="admin-password" placeholder="Enter admin password" autocomplete="current-password" />
+    </div>
+    <button class="btn btn-primary" onclick="handleAdminLogin()">Sign In as Admin</button>
+  </section>
+
+  <section id="admin-dashboard" class="hidden">
+    <div class="admin-controls">
+      <button class="btn btn-outline" onclick="loadAdminDashboard()">Refresh Data</button>
+      <button class="btn btn-secondary" onclick="handleAdminSignOut()">Sign Out</button>
+      <span id="admin-summary-text" class="pill">Loading...</span>
+    </div>
+
+    <div class="summary-grid" id="admin-summary-grid">
+      <div class="summary-card admin-summary-card">
+        <h3>Total Candidates</h3>
+        <div class="summary-stat"><span class="s-label">Count</span><span class="s-val green" id="summary-total-students">0</span></div>
+      </div>
+      <div class="summary-card admin-summary-card">
+        <h3>Submitted Tests</h3>
+        <div class="summary-stat"><span class="s-label">Count</span><span class="s-val" id="summary-submitted">0</span></div>
+      </div>
+      <div class="summary-card admin-summary-card">
+        <h3>Average MCQ Score</h3>
+        <div class="summary-stat"><span class="s-label">Avg</span><span class="s-val green" id="summary-average-score">0</span></div>
+      </div>
+      <div class="summary-card admin-summary-card">
+        <h3>Coding Attempts</h3>
+        <div class="summary-stat"><span class="s-label">Problems attempted</span><span class="s-val orange" id="summary-coding-attempts">0</span></div>
+      </div>
+    </div>
+
+    <div class="table-wrap">
+      <table class="data-table" id="admin-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Language</th>
+            <th>Status</th>
+            <th>MCQ Ans</th>
+            <th>Correct</th>
+            <th>Wrong</th>
+            <th>Score</th>
+            <th>Coding</th>
+            <th>Tab Switches</th>
+            <th>Started</th>
+            <th>Submitted</th>
+          </tr>
+        </thead>
+        <tbody id="admin-table-body"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <script>
+  const firebaseConfig = {
+  apiKey: "AIzaSyDPmgc6xQp3LKh0P8iX7dqDZWXMXd3HFbs",
+  authDomain: "sanr-onlinetest-1b078.firebaseapp.com",
+  projectId: "sanr-onlinetest-1b078",
+  storageBucket: "sanr-onlinetest-1b078.firebasestorage.app",
+  messagingSenderId: "225906289788",
+  appId: "1:225906289788:web:f85087da8a6f191fb3adf9"
+};
+
+  firebase.initializeApp(firebaseConfig);
+  const auth = firebase.auth();
+  const db = firebase.firestore();
+
+  const ADMIN_EMAIL = "admin@sanr.com"; // ✅ Admin email
+
+  function showAdminError(message) {
+    const err = document.getElementById('admin-login-error');
+    err.textContent = message;
+    err.classList.add('show');
+  }
+
+  function hideAdminError() {
+    const err = document.getElementById('admin-login-error');
+    err.classList.remove('show');
+    err.textContent = '';
+  }
+
+  async function handleAdminLogin() {
+    hideAdminError();
+
+    const email = document.getElementById('admin-email').value.trim();
+    const password = document.getElementById('admin-password').value;
+
+    if (!email || !password) {
+      showAdminError('Please enter admin email and password.');
+      return;
+    }
+
+    // 🔐 Optional pre-check
+    if (email !== ADMIN_EMAIL) {
+      showAdminError("Only admin can login here");
+      return;
+    }
+
+    try {
+      console.log('Attempting login for:', email);
+      // Force sign out first to ensure clean login
+      await auth.signOut();
+      await auth.signInWithEmailAndPassword(email, password);
+      console.log('Login successful');
+    } catch (err) {
+      console.error('Admin login failed:', err);
+
+      let errorMsg = 'Login failed. ';
+      if (err.code === 'auth/user-not-found') errorMsg += 'User not found.';
+      else if (err.code === 'auth/wrong-password') errorMsg += 'Wrong password.';
+      else if (err.code === 'auth/invalid-email') errorMsg += 'Invalid email.';
+      else errorMsg += err.message;
+
+      showAdminError(errorMsg);
+    }
+  }
+
+  async function handleAdminSignOut() {
+    await auth.signOut();
+    document.getElementById('admin-dashboard').classList.add('hidden');
+    document.getElementById('admin-login-card').classList.remove('hidden');
+    document.getElementById('admin-user-info').textContent = ''; 
+  }
+
+  // 🔥 MAIN ADMIN PROTECTION (IMPORTANT)
+  auth.onAuthStateChanged(async (user) => {
+    console.log('Auth state changed:', user ? user.email : 'null');
+    if (user) {
+
+      // ❌ Block non-admin users
+      if (user.email !== ADMIN_EMAIL) {
+        console.log('Blocking non-admin:', user.email);
+        showAdminError("Access denied: Not an admin");
+
+        await auth.signOut();
+
+        document.getElementById('admin-dashboard').classList.add('hidden');
+        document.getElementById('admin-login-card').classList.remove('hidden');
+
+        return;
+      }
+
+      // ✅ Allow admin
+      console.log('Allowing admin:', user.email);
+      document.getElementById('admin-login-card').classList.add('hidden');
+      document.getElementById('admin-dashboard').classList.remove('hidden');
+      document.getElementById('admin-user-info').textContent = `Signed in as ${user.email}`;
+
+      await loadAdminDashboard();
+
+    } else {
+      console.log('No user, showing login');
+      document.getElementById('admin-dashboard').classList.add('hidden');
+      document.getElementById('admin-login-card').classList.remove('hidden');
+    }
+  });
+
+  // ================= EXISTING CODE (UNCHANGED) =================
+
+  let MCQ_QUESTIONS = [];
+
+  async function loadAdminMcqKey() {
+    try {
+      const response = await fetch('data/100_mcq_questions.json');
+      if (!response.ok) throw new Error(`Failed to fetch MCQ JSON: ${response.status}`);
+      const payload = await response.json();
+      MCQ_QUESTIONS = (payload.mcq || []).map(q => ({ id: q.id, correct: q.correct }));
+      return true;
+    } catch (err) {
+      console.error('Failed to load MCQ answer key:', err);
+      return false;
+    }
+  }
+
+  async function loadAdminDashboard() {
+    document.getElementById('admin-summary-text').textContent = 'Loading dashboard...';
+    try {
+      const questionsLoaded = await loadAdminMcqKey();
+      if (!questionsLoaded) {
+        document.getElementById('admin-summary-text').textContent = 'Unable to load MCQ answer key. Please refresh the page.';
+        return;
+      }
+
+      // OPTIMIZATION: Batch fetch all data efficiently
+      const usersSnapshot = await db.collection('users').get();
+      const users = usersSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+
+      // Fetch all subcollections in parallel for better performance
+      const rows = await Promise.all(users.map(async (userDoc, index) => {
+        try {
+          // Parallel fetch of both subcollections
+          const [mcqSnap, codingSnap] = await Promise.all([
+            db.collection('users').doc(userDoc.id).collection('mcqResponses').get(),
+            db.collection('users').doc(userDoc.id).collection('codingResponses').get()
+          ]);
+
+          const mcqResponses = mcqSnap.docs.map(d => d.data());
+          const codingResponses = codingSnap.docs.map(d => d.data());
+
+          const answered = mcqResponses.filter(r => r.selectedOption !== undefined).length;
+          const correct = mcqResponses.filter(r => {
+            const question = MCQ_QUESTIONS.find(q => q.id === r.questionId);
+            return question && r.selectedOption === question.correct;
+          }).length;
+
+          const wrong = answered - correct;
+          const score = correct;
+          const codingAttempted = codingResponses.filter(r => r.code && r.code.trim()).length;
+
+          return {
+            index: index + 1,
+            name: userDoc.name || 'Unknown',
+            email: userDoc.email || 'N/A',
+            phone: userDoc.phone || 'N/A',
+            language: userDoc.selectedLanguage || 'N/A',
+            status: userDoc.status || 'in_progress',
+            answered,
+            correct,
+            wrong,
+            score,
+            codingAttempted,
+            tabSwitches: userDoc.tabSwitches || 0,
+            startedAt: userDoc.startTime ? new Date(userDoc.startTime.toMillis()).toLocaleString() : '-',
+            submittedAt: userDoc.endTime ? new Date(userDoc.endTime.toMillis()).toLocaleString() : '-'
+          };
+        } catch (err) {
+          console.error(`Failed to load data for user ${userDoc.id}:`, err);
+          return {
+            index: index + 1,
+            name: userDoc.name || 'Unknown',
+            email: userDoc.email || 'N/A',
+            phone: userDoc.phone || 'N/A',
+            language: userDoc.selectedLanguage || 'N/A',
+            status: userDoc.status || 'unknown',
+            answered: 0,
+            correct: 0,
+            wrong: 0,
+            score: 0,
+            codingAttempted: 0,
+            tabSwitches: userDoc.tabSwitches || 0,
+            startedAt: userDoc.startTime ? new Date(userDoc.startTime.toMillis()).toLocaleString() : '-',
+            submittedAt: userDoc.endTime ? new Date(userDoc.endTime.toMillis()).toLocaleString() : '-'
+          };
+        }
+      }));
+
+      renderAdminTable(rows);
+      updateAdminSummary(rows, users.length);
+    } catch (err) {
+      console.error('Dashboard load failed:', err);
+      showAdminError('Dashboard load failed: ' + (err.message || err.code || 'Unknown error'));
+      document.getElementById('admin-summary-text').textContent = 'Failed to load';
+      document.getElementById('admin-table-body').innerHTML = '';
+    }
+  }
+  
+
+  function renderAdminTable(rows) {
+    const body = document.getElementById('admin-table-body');
+    body.innerHTML = rows.map(row => `
+      <tr>
+        <td>${row.index}</td>
+        <td>${row.name}</td>
+        <td>${row.email}</td>
+        <td>${row.phone}</td>
+        <td>${row.language}</td>
+        <td><span class="tiny-tag">${row.status}</span></td>
+        <td>${row.answered}</td>
+        <td>${row.correct}</td>
+        <td>${row.wrong}</td>
+        <td>${row.score}</td>
+        <td>${row.codingAttempted}</td>
+        <td>${row.tabSwitches}</td>
+        <td>${row.startedAt}</td>
+        <td>${row.submittedAt}</td>
+      </tr>
+    `).join('');
+  }
+
+  function updateAdminSummary(rows, totalUsers) {
+    const submittedCount = rows.filter(r => r.status === 'submitted').length;
+    const averageScore = totalUsers ? (rows.reduce((sum, row) => sum + row.score, 0) / totalUsers).toFixed(1) : '0';
+    const totalCodingAttempts = rows.reduce((sum, row) => sum + row.codingAttempted, 0);
+
+    document.getElementById('summary-total-students').textContent = totalUsers;
+    document.getElementById('summary-submitted').textContent = submittedCount;
+    document.getElementById('summary-average-score').textContent = averageScore;
+    document.getElementById('summary-coding-attempts').textContent = totalCodingAttempts;
+    document.getElementById('admin-summary-text').textContent = `Loaded ${totalUsers} candidates`;
+  }
+</script>
+</body>
+</html>
